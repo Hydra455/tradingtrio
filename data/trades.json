@@ -18,5 +18,24 @@
     "notes": "Da da",
     "mistakes": "da da",
     "image": "images/denis/2026-08-10-nasdaq-long-147611.png"
+  },
+  {
+    "id": "denis-2026-08-10-nasdaq-495957",
+    "trader": "Denis",
+    "date": "2026-08-10",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 4.88,
+    "setup": "Liquidity Sweep + FVG + Inducement",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "FVG",
+      "Liquidity Sweep"
+    ],
+    "notes": "test",
+    "mistakes": "test",
+    "image": "images/denis/2026-08-10-nasdaq-long-495957.png"
   }
 ]
