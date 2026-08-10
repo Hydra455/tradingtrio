@@ -1,134 +1,21 @@
 [
-  {
-    "id": "gabriel-2026-08-03-nq-001",
-    "trader": "Gabriel",
-    "date": "2026-08-03",
-    "symbol": "NQ",
-    "direction": "LONG",
-    "r": 2.75,
-    "setup": "Liquidity Sweep",
-    "session": "New York",
-    "grade": "A+",
-    "followedPlan": true,
-    "tags": [
-      "FVG",
-      "MSS",
-      "PM Low"
-    ],
-    "notes": "Waited for the sweep and displacement before entering.",
-    "mistakes": "",
-    "image": "assets/img/placeholder.svg"
-  },
-  {
-    "id": "friend1-2026-08-04-eurusd-001",
-    "trader": "Friend 1",
-    "date": "2026-08-04",
-    "symbol": "EURUSD",
-    "direction": "SHORT",
-    "r": -1.0,
-    "setup": "London Reversal",
-    "session": "London",
-    "grade": "B",
-    "followedPlan": false,
-    "tags": [
-      "Reversal"
-    ],
-    "notes": "Bias was correct but entry came before confirmation.",
-    "mistakes": "Early entry.",
-    "image": "assets/img/placeholder.svg"
-  },
-  {
-    "id": "friend2-2026-08-05-xauusd-001",
-    "trader": "Friend 2",
-    "date": "2026-08-05",
-    "symbol": "XAUUSD",
-    "direction": "LONG",
-    "r": 3.2,
-    "setup": "Liquidity Sweep",
-    "session": "New York",
-    "grade": "A",
-    "followedPlan": true,
-    "tags": [
-      "Gold",
-      "FVG"
-    ],
-    "notes": "Clean sweep into HTF demand.",
-    "mistakes": "",
-    "image": "assets/img/placeholder.svg"
-  },
-  {
-    "id": "gabriel-2026-08-06-nq-002",
-    "trader": "Gabriel",
-    "date": "2026-08-06",
-    "symbol": "NQ",
-    "direction": "SHORT",
-    "r": -0.75,
-    "setup": "Opening Range",
-    "session": "New York",
-    "grade": "B",
-    "followedPlan": true,
-    "tags": [
-      "ORB"
-    ],
-    "notes": "Valid setup, reduced loss after partial reaction.",
-    "mistakes": "",
-    "image": "assets/img/placeholder.svg"
-  },
-  {
-    "id": "friend1-2026-08-07-es-002",
-    "trader": "Friend 1",
-    "date": "2026-08-07",
-    "symbol": "ES",
-    "direction": "LONG",
-    "r": 1.6,
-    "setup": "FVG Continuation",
-    "session": "New York",
-    "grade": "A",
-    "followedPlan": true,
-    "tags": [
-      "FVG",
-      "Trend"
-    ],
-    "notes": "Continuation entry after retracement.",
-    "mistakes": "",
-    "image": "assets/img/placeholder.svg"
-  },
-  {
-    "id": "gabriel-2026-08-08-nq-003",
-    "trader": "Gabriel",
-    "date": "2026-08-08",
-    "symbol": "NQ",
-    "direction": "LONG",
-    "r": 4.1,
-    "setup": "Liquidity Sweep",
-    "session": "New York",
-    "grade": "A+",
-    "followedPlan": true,
-    "tags": [
-      "MSS",
-      "FVG",
-      "A+"
-    ],
-    "notes": "Best execution of the week. Full patience before trigger.",
-    "mistakes": "",
-    "image": "assets/img/placeholder.svg"
-  },
-  {
-    "id": "friend2-2026-08-09-gbpusd-002",
-    "trader": "Friend 2",
-    "date": "2026-08-09",
-    "symbol": "GBPUSD",
-    "direction": "SHORT",
-    "r": 0.0,
-    "setup": "London Reversal",
-    "session": "London",
-    "grade": "B",
-    "followedPlan": true,
-    "tags": [
-      "BE"
-    ],
-    "notes": "Good idea, no expansion after entry.",
-    "mistakes": "",
-    "image": "assets/img/placeholder.svg"
-  }
+{
+  "id": "gabriel-2026-08-10-nasdaq-10728",
+  "trader": "Gabriel",
+  "date": "2026-08-10",
+  "symbol": "NASDAQ",
+  "direction": "LONG",
+  "r": 10,
+  "setup": "Liquidity Sweep + FVG",
+  "session": "London",
+  "grade": "A+",
+  "followedPlan": true,
+  "tags": [
+    "FVG",
+    "Liquidity Sweep"
+  ],
+  "notes": "",
+  "mistakes": "",
+  "image": "images/gabriel/2026-08-10-nasdaq-long.png"
+}
 ]
