@@ -1,4 +1,6 @@
 let trades=[],selectedTrader='all',previewFile=null,currentPayload=null;
+let currentGithubUser=null,currentTrader=null,membersConfig={members:[]};
+const transientImageUrls=new Map();
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=v=>String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
 const num=v=>Number(v||0), fmtR=v=>`${num(v)>0?'+':''}${num(v).toFixed(2)}R`, cls=v=>num(v)>0?'positive':num(v)<0?'negative':'neutral';
