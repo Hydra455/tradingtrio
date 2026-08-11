@@ -37,5 +37,21 @@
     "notes": "Break Even",
     "mistakes": "",
     "image": "images/denis/2026-08-11-nasdaq-long-918096.png"
+  },
+  {
+    "id": "denis-2026-08-11-nasdaq-228049",
+    "trader": "Denis",
+    "date": "2026-08-11",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": -2.64,
+    "setup": "SMC",
+    "session": "New York",
+    "grade": "A",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "Stop Loss hit",
+    "mistakes": "Structura a fost schimbata din uptrend in downtrend",
+    "image": "images/denis/2026-08-11-nasdaq-long-228049.png"
   }
 ]
