@@ -21,7 +21,7 @@
       <button class="nav-item" data-view="settings">Settings</button>
     </nav>
     <div class="theme-switcher"><div class="theme-label">Theme</div><div class="theme-buttons"><button class="theme-btn active" data-theme-choice="vice">Vice</button><button class="theme-btn" data-theme-choice="orange">Orange</button></div></div>
-    <div class="sidebar-footer"><span>TradingTrio</span><small>Track the setup, Respect the process</small></div>
+    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves</small></div>
   </aside>
 
   <main class="main">
@@ -65,7 +65,12 @@
           <div id="dropZone" class="drop-zone"><input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden><div id="dropEmpty"><div class="upload-icon">↑</div><strong>Drop trade screenshot here</strong><span>PNG, JPG or WEBP</span></div><img id="imagePreview" alt="Trade screenshot preview" hidden></div>
           <form id="tradeForm" class="trade-form">
             <div class="form-grid">
-              <label>Trader<select id="fTrader" required></select></label><label>Date<input id="fDate" type="date" required></label><label>Symbol<input id="fSymbol" placeholder="NQ" required></label><label>Direction<select id="fDirection"><option>LONG</option><option>SHORT</option></select></label>
+              <div class="posting-as">
+        <span>Posting as</span>
+        <strong id="postingAsName">Not connected</strong>
+        <small id="postingAsGithub">Connect your GitHub account in Settings</small>
+      </div>
+      <label>Date<input id="fDate" type="date" required></label><label>Symbol<input id="fSymbol" placeholder="NQ" required></label><label>Direction<select id="fDirection"><option>LONG</option><option>SHORT</option></select></label>
               <label>Session<select id="fSession"><option>New York</option><option>London</option><option>Asia</option><option>Other</option></select></label><label>Result (R)<input id="fR" type="number" step="0.01" placeholder="2.50" required></label><label>Setup<input id="fSetup" placeholder="Liquidity Sweep" required></label><label>Grade<select id="fGrade"><option>A+</option><option>A</option><option>B</option><option>C</option></select></label>
               <label>Followed plan?<select id="fPlan"><option value="true">Yes</option><option value="false">No</option></select></label><label>Tags<input id="fTags" placeholder="FVG, MSS, Sweep"></label>
             </div>
@@ -80,7 +85,29 @@
     <section id="settingsView" class="view">
       <div class="settings-grid">
         <article class="panel glow-card"><div class="panel-head"><div><div class="eyebrow">GitHub connection</div><h2>Repository Settings</h2></div></div><div class="settings-form">
-          <label>GitHub owner<input id="ghOwner" placeholder="Hydra455"></label><label>Repository<input id="ghRepo" placeholder="tradingtrio"></label><label>Branch<input id="ghBranch" value="main"></label><label>Fine-grained token<input id="ghToken" type="password" placeholder="github_pat_..."></label>
+          <label>GitHub owner<input id="ghOwner" placeholder="Hydra455"></label>
+          <label>Repository<input id="ghRepo" placeholder="tradingtrio"></label>
+          <label>Branch<input id="ghBranch" value="main"></label>
+          <label>Fine-grained token<input id="ghToken" type="password" placeholder="github_pat_..."></label>
+
+          <div class="identity-box">
+            <span class="identity-label">Authenticated GitHub account</span>
+            <strong id="githubIdentity">Not connected</strong>
+            <small id="githubIdentityStatus">Test the connection to identify this browser.</small>
+          </div>
+
+          <div id="pairingBox" class="pairing-box" hidden>
+            <label>Pair this GitHub account to
+              <select id="pairTrader">
+                <option value="">Choose trader...</option>
+                <option value="Denis">Denis</option>
+                <option value="Nel">Nel</option>
+                <option value="Alex">Alex</option>
+              </select>
+            </label>
+            <button class="primary-btn" id="pairTraderBtn" type="button">Pair Account</button>
+            <small>You only do this once per GitHub account. The mapping is stored in <code>data/members.json</code>.</small>
+          </div>
           <label class="toggle-row"><input id="rememberRepo" type="checkbox" checked> Remember owner/repo/branch in this browser</label>
           <div class="form-actions"><button class="primary-btn" id="saveSettingsBtn" type="button">Save Settings</button><button class="secondary-btn" id="testGitHubBtn" type="button">Test Connection</button><button class="secondary-btn" id="forgetTokenBtn" type="button">Forget Token</button></div><div id="settingsStatus" class="save-status"></div>
         </div></article>
