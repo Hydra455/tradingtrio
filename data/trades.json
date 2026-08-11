@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "id": "denis-2026-08-11-nasdaq-628194",
+    "trader": "Denis",
+    "date": "2026-08-11",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 3.33,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "Liquidity Sweep",
+      "CHOCH"
+    ],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-08-11-nasdaq-long-628194.png"
+  }
+]
