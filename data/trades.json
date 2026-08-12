@@ -53,5 +53,25 @@
     "notes": "Stop Loss hit",
     "mistakes": "Structura a fost schimbata din uptrend in downtrend",
     "image": "images/denis/2026-08-11-nasdaq-long-228049.png"
+  },
+  {
+    "id": "denis-2026-08-12-nasdaq-724210",
+    "trader": "Denis",
+    "date": "2026-08-12",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 5.45,
+    "setup": "SMC",
+    "session": "Asia",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "FVG",
+      "Liquidity Sweep",
+      "CHOCH"
+    ],
+    "notes": "A respectat in totalitate analiza tehnica pentru executarea acestui trade",
+    "mistakes": "",
+    "image": "images/denis/2026-08-12-nasdaq-long-724210.png"
   }
 ]
