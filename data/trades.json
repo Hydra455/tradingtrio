@@ -73,5 +73,25 @@
     "notes": "A respectat in totalitate analiza tehnica pentru executarea acestui trade",
     "mistakes": "",
     "image": "images/denis/2026-08-12-nasdaq-long-724210.png"
+  },
+  {
+    "id": "denis-2026-08-13-nasdaq-654022",
+    "trader": "Denis",
+    "date": "2026-08-13",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 3.81,
+    "setup": "Liquidity Sweep + FVG + CHOCH",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "FVG",
+      "Liquidity Sweep",
+      "CHOCH"
+    ],
+    "notes": "Si-a respectat analiza tehnica in totalitate",
+    "mistakes": "",
+    "image": "images/denis/2026-08-13-nasdaq-long-654022.png"
   }
 ]
