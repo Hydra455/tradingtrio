@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "denis-2026-08-17-nasdaq-012264",
+    "trader": "Denis",
+    "date": "2026-08-17",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 10.34,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "Doar un trade de tip A pentru ca nu am avut toate punctele corelate",
+    "image": "images/denis/2026-08-17-nasdaq-long-012264.png"
+  }
+]
