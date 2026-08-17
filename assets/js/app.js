@@ -1,4 +1,4 @@
-window.TRADINGTRIO_BUILD='2.3.0';
+window.TRADINGTRIO_BUILD='2.3.1';
 window.__ttImageUrls = window.__ttImageUrls || new Map();
 let trades=[],selectedTrader='all',previewFile=null,currentPayload=null;
 let currentGithubUser=null,currentTrader=null,membersConfig={members:[]};
@@ -45,7 +45,7 @@ function card(t){const tags=(t.tags||[]).slice(0,3).map(x=>`<span class="tag">${
 function bindCards(){
   $$(".trade-card").forEach(c=>c.onclick=()=>{
     const t=trades.find(x=>String(x.id)===c.dataset.id);if(!t)return;
-    $("#modalImage").src=(window.__ttImageUrls?.get(t.image)||t.image);
+    $("#modalImage").src=(window.__ttImageUrls?.get(t.id)||t.image);
     $("#modalImage").onerror=function(){this.src="assets/img/placeholder.svg"};
     const canManage=!!currentTrader && t.trader===currentTrader;
     $("#modalBody").innerHTML=`
@@ -193,7 +193,7 @@ function openEditTrade(id){
   $("#eR").value=num(t.r);$("#eSetup").value=t.setup||"";$("#eGrade").value=t.grade||"A";
   $("#ePlan").value=t.followedPlan?"true":"false";$("#eTags").value=(t.tags||[]).join(", ");
   $("#eNotes").value=t.notes||"";$("#eMistakes").value=t.mistakes||"";$("#eImage").value="";
-  $("#eImagePreview").src=(window.__ttImageUrls?.get(t.image)||t.image);$("#editTradeStatus").textContent="";
+  $("#eImagePreview").src=(window.__ttImageUrls?.get(t.id)||t.image);$("#editTradeStatus").textContent="";
   $("#editTradeModal").classList.remove("hidden")
 }
 
@@ -225,7 +225,7 @@ $("#editTradeForm").onsubmit=async e=>{
     await updateTradesJson(next,`Edit ${currentTrader} ${updated.symbol} trade`);
     if(replacement && oldTrade.image && oldTrade.image!==updated.image && oldTrade.image.startsWith("images/")){
       try{await deleteRepoFile(oldTrade.image,`Remove replaced ${currentTrader} trade screenshot`)}catch(err){console.warn("Old screenshot cleanup failed:",err)}
-      try{window.__ttImageUrls.set(updated.image,URL.createObjectURL(replacement))}catch{}
+      try{window.__ttImageUrls.set(updated.id,URL.createObjectURL(replacement))}catch{}
     }
     trades=next;renderAll();$("#editTradeModal").classList.add("hidden");$("#saveIndicator").textContent="Edited ✓"
   }catch(err){console.error(err);status("#editTradeStatus",err.message,"err")}
