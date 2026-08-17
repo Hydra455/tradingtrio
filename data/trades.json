@@ -9,10 +9,10 @@
     "setup": "SMC",
     "session": "London",
     "grade": "A",
-    "followedPlan": true,
+    "followedPlan": false,
     "tags": [],
-    "notes": "test",
-    "mistakes": "Doar un trade de tip A pentru ca nu am avut toate punctele corelate",
+    "notes": "Trade 50/50",
+    "mistakes": "Nu am avut setup-ul confirmat complet",
     "image": "images/denis/2026-08-17-nasdaq-long-012264.png"
   }
 ]
