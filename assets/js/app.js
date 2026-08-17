@@ -1,4 +1,4 @@
-window.TRADINGTRIO_BUILD='2.2.2';
+window.TRADINGTRIO_BUILD='2.3.0';
 window.__ttImageUrls = window.__ttImageUrls || new Map();
 let trades=[],selectedTrader='all',previewFile=null,currentPayload=null;
 let currentGithubUser=null,currentTrader=null,membersConfig={members:[]};
@@ -42,7 +42,28 @@ function renderAnalytics(){const rows=activeTrades();renderMetric('#analyticsSet
 function renderTeam(){const names=['Denis','Nel','Alex'];$('#teamCards').innerHTML=names.map(name=>{const s=stats(trades.filter(t=>t.trader===name));return `<article class="team-card"><h3>${name}</h3><div class="team-stats"><div class="team-stat"><span>Trades</span><strong>${s.trades}</strong></div><div class="team-stat"><span>Win Rate</span><strong>${s.winRate.toFixed(1)}%</strong></div><div class="team-stat"><span>Total R</span><strong class="${cls(s.totalR)}">${fmtR(s.totalR)}</strong></div><div class="team-stat"><span>Avg R</span><strong class="${cls(s.avgR)}">${fmtR(s.avgR)}</strong></div></div></article>`}).join('');const board=names.map(name=>({name,...stats(trades.filter(t=>t.trader===name))})).sort((a,b)=>b.totalR-a.totalR);$('#leaderboard').innerHTML=board.map((x,i)=>`<div class="leader-row"><strong>#${i+1} ${x.name}</strong><span class="muted">${x.winRate.toFixed(1)}% WR · ${x.trades} trades</span><strong class="${cls(x.totalR)}">${fmtR(x.totalR)}</strong></div>`).join('')}
 function card(t){const tags=(t.tags||[]).slice(0,3).map(x=>`<span class="tag">${esc(x)}</span>`).join('');const imageSrc=window.__ttImageUrls.get(t.id)||t.image;
   return `<article class="trade-card" data-id="${esc(t.id)}"><img src="${esc(imageSrc)}" alt="${esc(t.symbol)} trade screenshot" onerror="this.src='assets/img/placeholder.svg'"><div class="trade-body"><div class="trade-head"><h3>${esc(t.symbol)} · ${esc(String(t.direction).toUpperCase())}</h3><span class="result ${cls(t.r)}">${fmtR(t.r)}</span></div><div class="trade-meta">${esc(t.trader)} · ${esc(t.date)} · ${esc(t.session||'')}</div><div class="tags"><span class="tag">${esc(t.setup)}</span>${tags}</div></div></article>`}
-function bindCards(){$$('.trade-card').forEach(c=>c.onclick=()=>{const t=trades.find(x=>String(x.id)===c.dataset.id);if(!t)return;$('#modalImage').src=window.__ttImageUrls.get(t.id)||t.image;$('#modalImage').onerror=function(){this.src='assets/img/placeholder.svg'};$('#modalBody').innerHTML=`<div class="trade-head"><h2>${esc(t.symbol)} · ${esc(String(t.direction).toUpperCase())}</h2><span class="result ${cls(t.r)}">${fmtR(t.r)}</span></div><div class="trade-meta">${esc(t.trader)} · ${esc(t.date)} · ${esc(t.session||'')} · Grade ${esc(t.grade||'—')}</div><div class="tags"><span class="tag">${esc(t.setup)}</span>${(t.tags||[]).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div><span class="discipline ${t.followedPlan?'positive':'negative'}">${t.followedPlan?'✓ Followed plan':'✕ Broke plan'}</span><p class="modal-notes"><strong>Notes:</strong><br>${esc(t.notes||'No notes.')}</p>${t.mistakes?`<p class="modal-notes"><strong>Mistakes:</strong><br>${esc(t.mistakes)}</p>`:''}`;$('#tradeModal').classList.remove('hidden')})}
+function bindCards(){
+  $$(".trade-card").forEach(c=>c.onclick=()=>{
+    const t=trades.find(x=>String(x.id)===c.dataset.id);if(!t)return;
+    $("#modalImage").src=(window.__ttImageUrls?.get(t.image)||t.image);
+    $("#modalImage").onerror=function(){this.src="assets/img/placeholder.svg"};
+    const canManage=!!currentTrader && t.trader===currentTrader;
+    $("#modalBody").innerHTML=`
+      <div class="trade-head"><h2>${esc(t.symbol)} · ${esc(String(t.direction).toUpperCase())}</h2><span class="result ${cls(t.r)}">${fmtR(t.r)}</span></div>
+      <div class="trade-meta">${esc(t.trader)} · ${esc(t.date)} · ${esc(t.session||"")} · Grade ${esc(t.grade||"—")}</div>
+      <div class="tags"><span class="tag">${esc(t.setup)}</span>${(t.tags||[]).map(x=>`<span class="tag">${esc(x)}</span>`).join("")}</div>
+      <span class="discipline ${t.followedPlan?"positive":"negative"}">${t.followedPlan?"✓ Followed plan":"✕ Broke plan"}</span>
+      <p class="modal-notes"><strong>Notes:</strong><br>${esc(t.notes||"No notes.")}</p>
+      ${t.mistakes?`<p class="modal-notes"><strong>Mistakes:</strong><br>${esc(t.mistakes)}</p>`:""}
+      ${canManage?`<div class="trade-actions"><button class="manage-btn" id="editThisTrade">Edit Trade</button><button class="manage-btn danger-btn" id="deleteThisTrade">Delete Trade</button></div>`:""}
+    `;
+    $("#tradeModal").classList.remove("hidden");
+    if(canManage){
+      $("#editThisTrade").onclick=()=>openEditTrade(t.id);
+      $("#deleteThisTrade").onclick=()=>deleteTradeById(t.id,true);
+    }
+  })
+}
 function drawEquity(rows){const canvas=$('#equityChart');if(!canvas)return;const ctx=canvas.getContext('2d'),ratio=window.devicePixelRatio||1,w=canvas.clientWidth||700,h=220;canvas.width=w*ratio;canvas.height=h*ratio;ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,w,h);const sorted=[...rows].sort((a,b)=>new Date(a.date)-new Date(b.date));let run=0;const pts=[0,...sorted.map(t=>(run+=num(t.r)))];if(pts.length<2){ctx.fillStyle='#9f95ad';ctx.font='13px sans-serif';ctx.fillText('Add trades to build your equity curve.',14,26);return}const min=Math.min(...pts,0),max=Math.max(...pts,0),range=Math.max(max-min,1),pad=18,X=i=>pad+i*((w-pad*2)/(pts.length-1)),Y=v=>h-pad-((v-min)/range)*(h-pad*2),styles=getComputedStyle(document.body),accent=styles.getPropertyValue('--accent').trim(),accent2=styles.getPropertyValue('--accent2').trim();ctx.strokeStyle='rgba(255,255,255,.10)';ctx.beginPath();ctx.moveTo(pad,Y(0));ctx.lineTo(w-pad,Y(0));ctx.stroke();const grad=ctx.createLinearGradient(0,0,w,0);grad.addColorStop(0,accent);grad.addColorStop(1,accent2);ctx.strokeStyle=grad;ctx.lineWidth=2.8;ctx.shadowColor=accent;ctx.shadowBlur=14;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(X(i),Y(p)):ctx.moveTo(X(i),Y(p)));ctx.stroke();ctx.shadowBlur=0}
 
 function slug(s){return String(s).trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
@@ -149,7 +170,85 @@ function utf8ToBase64(str){const bytes=new TextEncoder().encode(str);let bin='';
 function base64ToUtf8(b64){const bin=atob(b64.replace(/\n/g,'')),bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));return new TextDecoder().decode(bytes)}
 async function putRepoFile(path,contentBase64,message,sha){const s=getGitHubSettings(),body={message,content:contentBase64,branch:s.branch};if(sha)body.sha=sha;return ghRequest(`/contents/${path.split('/').map(encodeURIComponent).join('/')}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
 async function getRepoFile(path){const s=getGitHubSettings();return ghRequest(`/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(s.branch)}`)}
+
+async function deleteRepoFile(path,message){
+  const s=getGitHubSettings();
+  const file=await getRepoFile(path);
+  return ghRequest(`/contents/${path.split('/').map(encodeURIComponent).join('/')}`,{
+    method:'DELETE',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({message,sha:file.sha,branch:s.branch})
+  })
+}
+
 $('#tradeForm').onsubmit=async e=>{e.preventDefault();const payload=buildPayload();if(!payload)return;if(!previewFile){status('#tradeSaveStatus','Choose a screenshot first.','err');return}const s=getGitHubSettings();if(!s.owner||!s.repo||!s.token){status('#tradeSaveStatus','Open Settings and connect this browser to GitHub first.','err');return}if(!currentTrader){status('#tradeSaveStatus','This GitHub account is not paired to a TradingTrio member yet. Open Settings.','err');return}status('#tradeSaveStatus','Saving screenshot to GitHub...','busy');try{await putRepoFile(payload.image,await fileToBase64(previewFile),`Add ${payload.trader} ${payload.symbol} trade screenshot`);status('#tradeSaveStatus','Updating data/trades.json...','busy');const file=await getRepoFile('data/trades.json'),current=JSON.parse(base64ToUtf8(file.content));if(current.some(t=>t.id===payload.id))throw new Error('This trade ID already exists.');current.push(payload);await putRepoFile('data/trades.json',utf8ToBase64(JSON.stringify(current,null,2)),`Add ${payload.trader} ${payload.symbol} trade`,file.sha);trades=current;if(previewFile){window.__ttImageUrls.set(payload.id,URL.createObjectURL(previewFile));}initFilters();renderAll();status('#tradeSaveStatus','Saved. Your real screenshot and trades.json were committed to GitHub.','ok');$('#saveIndicator').textContent='Saved ✓'}catch(err){console.error(err);status('#tradeSaveStatus',`${err.message}. If the screenshot committed but JSON failed, check GitHub before retrying.`,'err')}};
+
+
+function openEditTrade(id){
+  const t=trades.find(x=>String(x.id)===String(id));if(!t)return;
+  if(!currentTrader || t.trader!==currentTrader){alert("You can only edit your own trades.");return}
+  $("#tradeModal").classList.add("hidden");
+  $("#eTradeId").value=t.id;$("#eDate").value=t.date||"";$("#eSymbol").value=t.symbol||"";
+  $("#eDirection").value=String(t.direction||"LONG").toUpperCase();$("#eSession").value=t.session||"Other";
+  $("#eR").value=num(t.r);$("#eSetup").value=t.setup||"";$("#eGrade").value=t.grade||"A";
+  $("#ePlan").value=t.followedPlan?"true":"false";$("#eTags").value=(t.tags||[]).join(", ");
+  $("#eNotes").value=t.notes||"";$("#eMistakes").value=t.mistakes||"";$("#eImage").value="";
+  $("#eImagePreview").src=(window.__ttImageUrls?.get(t.image)||t.image);$("#editTradeStatus").textContent="";
+  $("#editTradeModal").classList.remove("hidden")
+}
+
+async function updateTradesJson(updatedTrades,message){
+  const file=await getRepoFile("data/trades.json");
+  await putRepoFile("data/trades.json",utf8ToBase64(JSON.stringify(updatedTrades,null,2)),message,file.sha)
+}
+
+$("#editTradeForm").onsubmit=async e=>{
+  e.preventDefault();
+  const id=$("#eTradeId").value,index=trades.findIndex(t=>String(t.id)===String(id));
+  if(index<0)return;
+  const oldTrade=trades[index];
+  if(!currentTrader || oldTrade.trader!==currentTrader){status("#editTradeStatus","You can only edit your own trades.","err");return}
+  const replacement=$("#eImage").files[0]||null;
+  const updated={...oldTrade,date:$("#eDate").value,symbol:$("#eSymbol").value.trim().toUpperCase(),direction:$("#eDirection").value,
+    session:$("#eSession").value,r:Number($("#eR").value),setup:$("#eSetup").value.trim(),grade:$("#eGrade").value,
+    followedPlan:$("#ePlan").value==="true",tags:$("#eTags").value.split(",").map(x=>x.trim()).filter(Boolean),
+    notes:$("#eNotes").value.trim(),mistakes:$("#eMistakes").value.trim()};
+  status("#editTradeStatus","Saving changes to GitHub...","busy");
+  try{
+    if(replacement){
+      const ext=(replacement.name.split(".").pop()||"png").toLowerCase().replace("jpeg","jpg");
+      const newPath=`images/${slug(currentTrader)}/${updated.date}-${slug(updated.symbol)}-${updated.direction.toLowerCase()}-${Date.now().toString().slice(-5)}.${ext}`;
+      await putRepoFile(newPath,await fileToBase64(replacement),`Replace ${currentTrader} ${updated.symbol} trade screenshot`);
+      updated.image=newPath;
+    }
+    const next=[...trades];next[index]=updated;
+    await updateTradesJson(next,`Edit ${currentTrader} ${updated.symbol} trade`);
+    if(replacement && oldTrade.image && oldTrade.image!==updated.image && oldTrade.image.startsWith("images/")){
+      try{await deleteRepoFile(oldTrade.image,`Remove replaced ${currentTrader} trade screenshot`)}catch(err){console.warn("Old screenshot cleanup failed:",err)}
+      try{window.__ttImageUrls.set(updated.image,URL.createObjectURL(replacement))}catch{}
+    }
+    trades=next;renderAll();$("#editTradeModal").classList.add("hidden");$("#saveIndicator").textContent="Edited ✓"
+  }catch(err){console.error(err);status("#editTradeStatus",err.message,"err")}
+};
+
+async function deleteTradeById(id,fromDetail=false){
+  const t=trades.find(x=>String(x.id)===String(id));if(!t)return;
+  if(!currentTrader || t.trader!==currentTrader){alert("You can only delete your own trades.");return}
+  if(!confirm(`Delete ${t.symbol} ${t.direction} trade from ${t.date}? This cannot be undone.`))return;
+  if(fromDetail)$("#tradeModal").classList.add("hidden");
+  status("#editTradeStatus","Deleting trade from GitHub...","busy");
+  try{
+    const next=trades.filter(x=>String(x.id)!==String(id));
+    await updateTradesJson(next,`Delete ${currentTrader} ${t.symbol} trade`);
+    if(t.image && t.image.startsWith("images/")){
+      try{await deleteRepoFile(t.image,`Delete ${currentTrader} ${t.symbol} trade screenshot`)}catch(err){console.warn("Screenshot deletion failed:",err)}
+    }
+    trades=next;renderAll();$("#editTradeModal").classList.add("hidden");$("#saveIndicator").textContent="Deleted ✓"
+  }catch(err){console.error(err);if(fromDetail)alert(`Delete failed: ${err.message}`);else status("#editTradeStatus",err.message,"err")}
+}
+
+$("#deleteTradeBtn").onclick=()=>deleteTradeById($("#eTradeId").value,false);
+$$("[data-edit-close]").forEach(x=>x.onclick=()=>$("#editTradeModal").classList.add("hidden"));
 
 function activate(view){$$('.view').forEach(v=>v.classList.remove('active'));$('#'+view+'View').classList.add('active');$$('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===view));$('#pageTitle').textContent={dashboard:'Dashboard',journal:'Journal',analytics:'Analytics',team:'Team',add:'Add Trade',settings:'Settings'}[view];if(view==='dashboard')requestAnimationFrame(()=>drawEquity(activeTrades()))}
 $$('.nav-item').forEach(n=>n.onclick=()=>activate(n.dataset.view));$$('[data-view-jump]').forEach(n=>n.onclick=()=>activate(n.dataset.viewJump));$('#globalTraderFilter').onchange=e=>{selectedTrader=e.target.value;renderAll()};['#searchTrades','#filterResult','#filterSession','#filterSetup'].forEach(sel=>$(sel).addEventListener(sel==='#searchTrades'?'input':'change',renderJournal));$$('[data-modal-close]').forEach(x=>x.onclick=()=>$('#tradeModal').classList.add('hidden'));window.onkeydown=e=>{if(e.key==='Escape')$('#tradeModal').classList.add('hidden')};window.onresize=()=>{$('#dashboardView').classList.contains('active')&&drawEquity(activeTrades())};

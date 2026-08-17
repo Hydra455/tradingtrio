@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#08090e">
   <title>TradingTrio</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2.2.2">
+  <link rel="stylesheet" href="assets/css/styles.css?v=2.3.0">
 </head>
 <body data-theme="vice">
 <div class="ambient-bg"></div><div class="scanlines"></div>
@@ -21,7 +21,7 @@
       <button class="nav-item" data-view="settings">Settings</button>
     </nav>
     <div class="theme-switcher"><div class="theme-label">Theme</div><div class="theme-buttons"><button class="theme-btn active" data-theme-choice="vice">Vice</button><button class="theme-btn" data-theme-choice="orange">Orange</button></div></div>
-    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves · v2.2.2</small></div>
+    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves · v2.3.0</small></div>
   </aside>
 
   <main class="main">
@@ -117,6 +117,39 @@
   </main>
 </div>
 <div id="tradeModal" class="modal hidden"><div class="modal-overlay" data-modal-close></div><article class="modal-card"><button class="modal-x" data-modal-close>×</button><img id="modalImage" alt=""><div id="modalBody"></div></article></div>
-<script src="assets/js/app.js?v=2.2.2"></script>
+
+<div id="editTradeModal" class="modal hidden">
+  <div class="modal-overlay" data-edit-close></div>
+  <article class="modal-card edit-modal-card">
+    <button class="modal-x" data-edit-close>×</button>
+    <div class="panel-head"><div><div class="eyebrow">Manage Trade</div><h2>Edit Trade</h2></div></div>
+    <form id="editTradeForm" class="trade-form">
+      <input id="eTradeId" type="hidden">
+      <div class="form-grid">
+        <label>Date<input id="eDate" type="date" required></label>
+        <label>Symbol<input id="eSymbol" required></label>
+        <label>Direction<select id="eDirection"><option>LONG</option><option>SHORT</option></select></label>
+        <label>Session<select id="eSession"><option>New York</option><option>London</option><option>Asia</option><option>Other</option></select></label>
+        <label>Result (R)<input id="eR" type="number" step="0.01" required></label>
+        <label>Setup<input id="eSetup" required></label>
+        <label>Grade<select id="eGrade"><option>A+</option><option>A</option><option>B</option><option>C</option></select></label>
+        <label>Followed plan?<select id="ePlan"><option value="true">Yes</option><option value="false">No</option></select></label>
+        <label class="full-span">Tags<input id="eTags" placeholder="FVG, MSS, Sweep"></label>
+      </div>
+      <label>Notes<textarea id="eNotes" rows="5"></textarea></label>
+      <label>Mistakes<textarea id="eMistakes" rows="3"></textarea></label>
+      <label class="edit-image-label">Replace screenshot (optional)<input id="eImage" type="file" accept="image/png,image/jpeg,image/webp"></label>
+      <div class="edit-current-image"><span>Current screenshot</span><img id="eImagePreview" alt="Current trade screenshot"></div>
+      <div class="form-actions">
+        <button class="primary-btn" type="submit">Save Changes</button>
+        <button class="secondary-btn danger-btn" id="deleteTradeBtn" type="button">Delete Trade</button>
+        <button class="secondary-btn" data-edit-close type="button">Cancel</button>
+      </div>
+      <div id="editTradeStatus" class="save-status"></div>
+    </form>
+  </article>
+</div>
+
+<script src="assets/js/app.js?v=2.3.0"></script>
 </body>
 </html>
