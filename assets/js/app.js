@@ -1,4 +1,4 @@
-window.TRADINGTRIO_BUILD='2.3.1';
+window.TRADINGTRIO_BUILD='2.3.2';
 window.__ttImageUrls = window.__ttImageUrls || new Map();
 let trades=[],selectedTrader='all',previewFile=null,currentPayload=null;
 let currentGithubUser=null,currentTrader=null,membersConfig={members:[]};
@@ -76,7 +76,7 @@ function loadGitHubSettings(){const s=getGitHubSettings();$('#ghOwner').value=s.
 function status(sel,msg,type=''){const el=$(sel);el.textContent=msg;el.className=`save-status ${type}`}
 function saveGitHubSettings(){const owner=$('#ghOwner').value.trim(),repo=$('#ghRepo').value.trim(),branch=$('#ghBranch').value.trim()||'main',token=$('#ghToken').value.trim();if($('#rememberRepo').checked){localStorage.setItem('tt_gh_owner',owner);localStorage.setItem('tt_gh_repo',repo);localStorage.setItem('tt_gh_branch',branch)}else{localStorage.removeItem('tt_gh_owner');localStorage.removeItem('tt_gh_repo');localStorage.removeItem('tt_gh_branch')}if(token)sessionStorage.setItem('tt_gh_token',token);else sessionStorage.removeItem('tt_gh_token');$('#saveIndicator').textContent=owner&&repo?`${owner}/${repo}`:'Local view';status('#settingsStatus','Settings saved in this browser session.','ok')}
 $('#saveSettingsBtn').onclick=saveGitHubSettings;$('#forgetTokenBtn').onclick=()=>{sessionStorage.removeItem('tt_gh_token');$('#ghToken').value='';currentGithubUser=null;currentTrader=null;updateIdentityUI();status('#settingsStatus','Token removed from this browser session.','ok')};
-async function ghRequest(path,options={}){const s=getGitHubSettings();if(!s.owner||!s.repo)throw new Error('Repository owner/name missing.');if(!s.token)throw new Error('No GitHub token saved. Open Settings first.');const res=await fetch(`https://api.github.com/repos/${encodeURIComponent(s.owner)}/${encodeURIComponent(s.repo)}${path}`,{...options,headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${s.token}`,'X-GitHub-Api-Version':'2022-11-28',...(options.headers||{})}});if(!res.ok){let msg=`GitHub API ${res.status}`;try{const j=await res.json();msg=j.message||msg}catch{}throw new Error(msg)}return res.status===204?null:res.json()}
+async function ghRequest(path,options={}){const s=getGitHubSettings();if(!s.owner||!s.repo)throw new Error('Repository owner/name missing.');if(!s.token)throw new Error('No GitHub token saved. Open Settings first.');const res=await fetch(`https://api.github.com/repos/${encodeURIComponent(s.owner)}/${encodeURIComponent(s.repo)}${path}`,{...options,headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${s.token}`,'X-GitHub-Api-Version':'2022-11-28',...(options.headers||{})}});if(!res.ok){let msg=`GitHub API ${res.status}`;try{const j=await res.json();msg=j.message||msg}catch{}throw new Error(`${res.status}: ${msg}`)}return res.status===204?null:res.json()}
 
 async function ghUserRequest(){
   const s=getGitHubSettings();
@@ -91,7 +91,7 @@ async function ghUserRequest(){
   if(!res.ok){
     let msg=`GitHub API ${res.status}`;
     try{const j=await res.json();msg=j.message||msg}catch{}
-    throw new Error(msg)
+    throw new Error(`${res.status}: ${msg}`)
   }
   return res.json()
 }
@@ -197,9 +197,63 @@ function openEditTrade(id){
   $("#editTradeModal").classList.remove("hidden")
 }
 
-async function updateTradesJson(updatedTrades,message){
-  const file=await getRepoFile("data/trades.json");
-  await putRepoFile("data/trades.json",utf8ToBase64(JSON.stringify(updatedTrades,null,2)),message,file.sha)
+function isShaConflict(err){
+  const msg=String(err?.message||err||"").toLowerCase();
+  return msg.includes("does not match") ||
+         msg.includes("sha") && msg.includes("match") ||
+         msg.includes("conflict") ||
+         msg.includes("409");
+}
+
+async function mutateTradesJson(mutator,message,maxAttempts=4){
+  let lastError=null;
+
+  for(let attempt=1;attempt<=maxAttempts;attempt++){
+    try{
+      // Always fetch the newest blob + SHA immediately before writing.
+      const file=await getRepoFile("data/trades.json");
+      const latest=JSON.parse(base64ToUtf8(file.content));
+      const next=mutator(latest);
+
+      await putRepoFile(
+        "data/trades.json",
+        utf8ToBase64(JSON.stringify(next,null,2)),
+        message,
+        file.sha
+      );
+
+      return next;
+    }catch(err){
+      lastError=err;
+      if(!isShaConflict(err) || attempt===maxAttempts) throw err;
+
+      // Small increasing delay before fetching the newest SHA again.
+      await new Promise(resolve=>setTimeout(resolve,250*attempt));
+    }
+  }
+
+  throw lastError||new Error("Unable to update trades.json");
+}
+
+async function updateTradeInGithub(updatedTrade,message){
+  return mutateTradesJson(latest=>{
+    const index=latest.findIndex(t=>String(t.id)===String(updatedTrade.id));
+    if(index<0) throw new Error("This trade no longer exists. Refresh the journal.");
+    if(latest[index].trader!==currentTrader) throw new Error("You can only edit your own trades.");
+
+    const next=[...latest];
+    next[index]={...latest[index],...updatedTrade};
+    return next;
+  },message);
+}
+
+async function deleteTradeFromGithub(tradeId,message){
+  return mutateTradesJson(latest=>{
+    const target=latest.find(t=>String(t.id)===String(tradeId));
+    if(!target) return latest; // already deleted = success
+    if(target.trader!==currentTrader) throw new Error("You can only delete your own trades.");
+    return latest.filter(t=>String(t.id)!==String(tradeId));
+  },message);
 }
 
 $("#editTradeForm").onsubmit=async e=>{
@@ -221,8 +275,7 @@ $("#editTradeForm").onsubmit=async e=>{
       await putRepoFile(newPath,await fileToBase64(replacement),`Replace ${currentTrader} ${updated.symbol} trade screenshot`);
       updated.image=newPath;
     }
-    const next=[...trades];next[index]=updated;
-    await updateTradesJson(next,`Edit ${currentTrader} ${updated.symbol} trade`);
+    const next=await updateTradeInGithub(updated,`Edit ${currentTrader} ${updated.symbol} trade`);
     if(replacement && oldTrade.image && oldTrade.image!==updated.image && oldTrade.image.startsWith("images/")){
       try{await deleteRepoFile(oldTrade.image,`Remove replaced ${currentTrader} trade screenshot`)}catch(err){console.warn("Old screenshot cleanup failed:",err)}
       try{window.__ttImageUrls.set(updated.id,URL.createObjectURL(replacement))}catch{}
@@ -238,8 +291,7 @@ async function deleteTradeById(id,fromDetail=false){
   if(fromDetail)$("#tradeModal").classList.add("hidden");
   status("#editTradeStatus","Deleting trade from GitHub...","busy");
   try{
-    const next=trades.filter(x=>String(x.id)!==String(id));
-    await updateTradesJson(next,`Delete ${currentTrader} ${t.symbol} trade`);
+    const next=await deleteTradeFromGithub(id,`Delete ${currentTrader} ${t.symbol} trade`);
     if(t.image && t.image.startsWith("images/")){
       try{await deleteRepoFile(t.image,`Delete ${currentTrader} ${t.symbol} trade screenshot`)}catch(err){console.warn("Screenshot deletion failed:",err)}
     }
