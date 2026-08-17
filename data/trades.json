@@ -109,5 +109,23 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-08-14-nasdaq-long-104771.png"
+  },
+  {
+    "id": "nel-2026-08-17-nq-240693",
+    "trader": "Nel",
+    "date": "2026-08-17",
+    "symbol": "NQ",
+    "direction": "LONG",
+    "r": 3,
+    "setup": "liquidity fvg choch bos",
+    "session": "New York",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "fvg"
+    ],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/nel/2026-08-17-nq-long-240693.png"
   }
 ]
