@@ -74,5 +74,23 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-08-17-nasdaq-long-695428.png"
+  },
+  {
+    "id": "nel-2026-07-18-nq-727904",
+    "trader": "Nel",
+    "date": "2026-07-18",
+    "symbol": "NQ",
+    "direction": "SHORT",
+    "r": -1,
+    "setup": "low liquidity fvg ifvg ob",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "fvg mss sweep ob"
+    ],
+    "notes": "order block, sweep mic, choch fvg+ifvg",
+    "mistakes": "intrare executata prea rapid fara  o lichidare concreta",
+    "image": "images/nel/2026-07-18-nq-short-727904.png"
   }
 ]
