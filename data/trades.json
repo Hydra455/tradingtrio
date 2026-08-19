@@ -92,5 +92,24 @@
     "notes": "order block, sweep mic, choch fvg+ifvg",
     "mistakes": "intrare executata prea rapid fara  o lichidare concreta",
     "image": "images/nel/2026-07-18-nq-short-727904.png"
+  },
+  {
+    "id": "denis-2026-08-19-nasdaq-421074",
+    "trader": "Denis",
+    "date": "2026-08-19",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 5.24,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A",
+    "followedPlan": false,
+    "tags": [
+      "FVG",
+      "Liquidity Sweep"
+    ],
+    "notes": "A luat lichidarea in Asia Low, mi s-a format FVG pe timeframe-ul de 5m",
+    "mistakes": "Nu s-a astepat un COCH confirmat",
+    "image": "images/denis/2026-08-19-nasdaq-long-421074.png"
   }
 ]
