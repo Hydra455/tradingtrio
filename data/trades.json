@@ -111,5 +111,23 @@
     "notes": "A luat lichidarea in Asia Low, mi s-a format FVG pe timeframe-ul de 5m",
     "mistakes": "Nu s-a astepat un COCH confirmat",
     "image": "images/denis/2026-08-19-nasdaq-long-421074.png"
+  },
+  {
+    "id": "nel-2026-08-19-nq-735073",
+    "trader": "Nel",
+    "date": "2026-08-19",
+    "symbol": "NQ",
+    "direction": "LONG",
+    "r": 3.5,
+    "setup": "liq sweep ,choch, fvg",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "fvg choch sweep"
+    ],
+    "notes": "lichidare multipla in zona de fvg+choch",
+    "mistakes": "iesire mai rapida",
+    "image": "images/nel/2026-08-19-nq-long-735073.png"
   }
 ]
