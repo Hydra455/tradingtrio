@@ -129,5 +129,23 @@
     "notes": "lichidare multipla in zona de fvg+choch",
     "mistakes": "iesire mai rapida",
     "image": "images/nel/2026-08-19-nq-long-735073.png"
+  },
+  {
+    "id": "nel-2026-08-27-nq-191018",
+    "trader": "Nel",
+    "date": "2026-08-27",
+    "symbol": "NQ",
+    "direction": "LONG",
+    "r": 2.57,
+    "setup": "liquidity fvg choch bos+ lichidare sesiune",
+    "session": "New York",
+    "grade": "A",
+    "followedPlan": true,
+    "tags": [
+      "fvg choch sweep"
+    ],
+    "notes": "liquidity swee + liquidity session",
+    "mistakes": "iesire rapida",
+    "image": "images/nel/2026-08-27-nq-long-191018.png"
   }
 ]
