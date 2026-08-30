@@ -147,5 +147,23 @@
     "notes": "liquidity swee + liquidity session",
     "mistakes": "iesire rapida",
     "image": "images/nel/2026-08-27-nq-long-191018.png"
+  },
+  {
+    "id": "nel-2026-08-27-nq-523558",
+    "trader": "Nel",
+    "date": "2026-08-27",
+    "symbol": "NQ",
+    "direction": "LONG",
+    "r": -1.5,
+    "setup": "liquidity fvg choch fara bos",
+    "session": "New York",
+    "grade": "C",
+    "followedPlan": true,
+    "tags": [
+      "fvg choch sweep"
+    ],
+    "notes": "sweep luat de 2 ori",
+    "mistakes": "intrare rapida",
+    "image": "images/nel/2026-08-27-nq-long-523558.png"
   }
 ]
