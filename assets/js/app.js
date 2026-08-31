@@ -1,4 +1,4 @@
-window.TRADINGTRIO_BUILD='2.5.1';
+window.TRADINGTRIO_BUILD='2.5.2';
 window.__ttImageUrls = window.__ttImageUrls || new Map();
 let trades=[],selectedTrader='all',previewFile=null,currentPayload=null;
 let currentGithubUser=null,currentTrader=null,membersConfig={members:[]};
@@ -8,185 +8,86 @@ const esc=v=>String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replac
 const num=v=>Number(v||0), fmtR=v=>`${num(v)>0?'+':''}${num(v).toFixed(2)}R`, cls=v=>num(v)>0?'positive':num(v)<0?'negative':'neutral';
 
 
-const FF_CALENDAR_URL='https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-const FF_CACHE_KEY='tt_ff_calendar_cache_v1';
-const FF_CACHE_TIME_KEY='tt_ff_calendar_cache_time_v1';
-const FF_MIN_REFRESH_MS=160000; // stays below the reported 2 requests / 5 minutes ceiling
-const FF_NORMAL_REFRESH_MS=300000;
-let marketCalendar=[],marketFeed=[],marketTab='calendar',marketRefreshTimer=null,marketCountdownTimer=null,marketLastFetch=0;
+const TT_GDELT_BASE='https://api.gdeltproject.org/api/v2/doc/doc';
+const TT_NEWS_QUERIES={
+  macro:'(economy OR economic OR GDP OR inflation OR unemployment OR "interest rate" OR recession OR "central bank")',
+  forex:'(forex OR "foreign exchange" OR currency OR dollar OR euro OR sterling OR yen OR "exchange rate")',
+  centralbanks:'("Federal Reserve" OR ECB OR "European Central Bank" OR "Bank of England" OR BOE OR "Bank of Japan" OR BOJ OR "central bank")',
+  inflation:'(inflation OR CPI OR PCE OR "consumer prices" OR "producer prices")',
+  jobs:'("nonfarm payrolls" OR NFP OR unemployment OR payrolls OR "jobless claims" OR employment)'
+};
+let ttMarketTab='calendar',ttNewsQuery='macro',ttNewsTimer=null,ttNewsLoading=false;
 
-function ffImpactRank(v){return v==='High'?3:v==='Medium'?2:v==='Low'?1:0}
-function ffEventId(x){return `${x.date||''}|${x.country||''}|${x.title||''}`}
-function normalizeFFEvent(raw){
-  return{
-    id:ffEventId(raw),
-    title:String(raw.title||'Economic event'),
-    country:String(raw.country||'All'),
-    date:String(raw.date||''),
-    impact:String(raw.impact||'Low'),
-    forecast:String(raw.forecast??''),
-    previous:String(raw.previous??''),
-    actual:String(raw.actual??'')
-  }
-}
-function marketEventDate(x){
-  const d=new Date(x.date);
-  return Number.isNaN(d.getTime())?null:d
-}
-function formatMarketDay(d){
-  return d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})
-}
-function formatMarketTime(d){
-  return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
-}
-function marketStatus(state,text,detail=''){
-  const dot=$('#marketStatusDot'),label=$('#marketStatusText'),sub=$('#marketUpdatedText');
-  if(!dot)return;
-  dot.className=`market-status-dot ${state}`;
-  label.textContent=text;
-  sub.textContent=detail
-}
-function readFFCache(){
-  try{
-    const raw=localStorage.getItem(FF_CACHE_KEY);
-    if(!raw)return false;
-    const parsed=JSON.parse(raw);
-    if(!Array.isArray(parsed))return false;
-    marketCalendar=parsed.map(normalizeFFEvent);
-    renderMarketCalendar();
-    renderNextImpact();
-    const t=Number(localStorage.getItem(FF_CACHE_TIME_KEY)||0);
-    if(t)marketStatus('live','Calendar ready',`Cached ${new Date(t).toLocaleTimeString()}`);
-    return true
-  }catch{return false}
-}
-function saveFFCache(raw){
-  try{
-    localStorage.setItem(FF_CACHE_KEY,JSON.stringify(raw));
-    localStorage.setItem(FF_CACHE_TIME_KEY,String(Date.now()))
-  }catch{}
-}
-function addMarketFeed(type,title,detail=''){
-  marketFeed.unshift({type,title,detail,at:new Date().toISOString()});
-  if(marketFeed.length>100)marketFeed.length=100;
-  renderMarketFeed()
-}
-function detectCalendarChanges(oldRows,newRows){
-  if(!oldRows.length)return;
-  const oldMap=new Map(oldRows.map(x=>[x.id,x]));
-  for(const n of newRows){
-    const o=oldMap.get(n.id);
-    if(!o){
-      addMarketFeed('New',`${n.country} · ${n.title}`,`${n.impact} impact`);
-      continue
-    }
-    if(n.actual!==o.actual && n.actual){
-      addMarketFeed('Released',`${n.country} · ${n.title}`,`Actual ${n.actual}${n.forecast?` · Forecast ${n.forecast}`:''}`);
-      setTimeout(()=>document.querySelector(`[data-market-id="${CSS.escape(n.id)}"]`)?.classList.add('released'),50)
-    }else if(n.forecast!==o.forecast || n.previous!==o.previous){
-      addMarketFeed('Updated',`${n.country} · ${n.title}`,`Forecast ${n.forecast||'—'} · Previous ${n.previous||'—'}`)
-    }
-  }
-}
-async function fetchFFCalendar(force=false){
-  const now=Date.now();
-  if(!force && marketLastFetch && now-marketLastFetch<FF_MIN_REFRESH_MS)return false;
-  marketLastFetch=now;
-  marketStatus('loading','Updating calendar…','Forex Factory weekly JSON');
-  try{
-    const res=await fetch(`${FF_CALENDAR_URL}?v=${Math.floor(now/FF_MIN_REFRESH_MS)}`,{cache:'no-store'});
-    if(!res.ok)throw new Error(`HTTP ${res.status}`);
-    const raw=await res.json();
-    if(!Array.isArray(raw))throw new Error('Unexpected calendar response');
-    const old=marketCalendar.slice();
-    const next=raw.map(normalizeFFEvent).sort((a,b)=>(marketEventDate(a)?.getTime()||0)-(marketEventDate(b)?.getTime()||0));
-    detectCalendarChanges(old,next);
-    marketCalendar=next;
-    saveFFCache(raw);
-    renderMarketCalendar();
-    renderNextImpact();
-    marketStatus('live','Calendar live',`Updated ${new Date().toLocaleTimeString()} · auto refresh`);
-    scheduleMarketRefresh();
-    return true
-  }catch(err){
-    console.warn('Forex Factory calendar:',err);
-    const cached=readFFCache();
-    marketStatus(cached?'live':'error',cached?'Using cached calendar':'Calendar unavailable',cached?'Automatic retry scheduled':String(err.message||err));
-    scheduleMarketRefresh();
-    return false
-  }
-}
-function nextHighImpact(){
-  const now=Date.now();
-  return marketCalendar
-    .filter(x=>x.impact==='High' && (marketEventDate(x)?.getTime()||0)>=now-60000)
-    .sort((a,b)=>marketEventDate(a)-marketEventDate(b))[0]||null
-}
-function scheduleMarketRefresh(){
-  clearTimeout(marketRefreshTimer);
-  const next=nextHighImpact(),now=Date.now(),t=next?marketEventDate(next)?.getTime():0;
-  const near=!!t && Math.abs(t-now)<=10*60*1000;
-  // Near a high-impact event use the fastest interval that remains inside FF's weekly-export limit.
-  marketRefreshTimer=setTimeout(()=>fetchFFCalendar(false),near?FF_MIN_REFRESH_MS:FF_NORMAL_REFRESH_MS)
-}
-function countdownText(ms){
-  if(ms<=0 && ms>-10*60*1000)return 'RELEASE WINDOW';
-  if(ms<=-10*60*1000)return 'Released';
-  const total=Math.floor(ms/1000),d=Math.floor(total/86400),h=Math.floor((total%86400)/3600),m=Math.floor((total%3600)/60),s=total%60;
-  return d>0?`${d}d ${String(h).padStart(2,'0')}h`:h>0?`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
-}
-function renderNextImpact(){
-  const box=$('#nextImpactContent');if(!box)return;
-  const ev=nextHighImpact();
-  if(!ev){box.innerHTML='<strong>No upcoming high-impact event in the loaded week.</strong>';return}
-  const d=marketEventDate(ev);
-  box.innerHTML=`<div><strong>${esc(ev.country)} · ${esc(ev.title)}</strong><small>${esc(formatMarketDay(d))} · ${esc(formatMarketTime(d))}${ev.forecast?` · Forecast ${esc(ev.forecast)}`:''}</small></div><span class="countdown">${esc(countdownText(d.getTime()-Date.now()))}</span>`
-}
-function impactBars(impact){
-  const rank=ffImpactRank(impact),cls=impact.toLowerCase();
-  return `<span class="impact ${cls}" title="${esc(impact)} impact"><i class="${rank>=1?'on':''}"></i><i class="${rank>=2?'on':''}"></i><i class="${rank>=3?'on':''}"></i></span>`
-}
-function renderMarketCalendar(){
-  const list=$('#marketCalendarList');if(!list)return;
-  const currency=$('#marketCurrencyFilter')?.value||'all',impact=$('#marketImpactFilter')?.value||'all',day=$('#marketDayFilter')?.value||'all';
-  const now=new Date(),start=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime(),end=start+86400000;
-  let rows=marketCalendar.filter(x=>{
-    const t=marketEventDate(x)?.getTime()||0;
-    if(currency!=='all'&&x.country!==currency)return false;
-    if(impact!=='all'&&x.impact!==impact)return false;
-    if(day==='today'&&(t<start||t>=end))return false;
-    if(day==='upcoming'&&t<Date.now()-60000)return false;
-    return true
-  });
-  list.innerHTML=rows.length?rows.map(x=>{
-    const d=marketEventDate(x),past=d&&d.getTime()<Date.now(),actual=x.actual||'—';
-    return `<div class="calendar-row ${past?'past':''}" data-market-id="${esc(x.id)}">
-      <span class="calendar-time"><b>${esc(d?formatMarketTime(d):'—')}</b><small>${esc(d?formatMarketDay(d):'')}</small></span>
-      <span class="currency-badge">${esc(x.country)}</span>
-      ${impactBars(x.impact)}
-      <span class="event-name"><strong>${esc(x.title)}</strong><small>${x.actual?'Released':'Scheduled'}</small></span>
-      <span data-col="actual" class="actual-value ${x.actual?'has-actual':''}">${esc(actual)}</span>
-      <span data-col="forecast">${esc(x.forecast||'—')}</span>
-      <span data-col="previous">${esc(x.previous||'—')}</span>
-    </div>`
-  }).join(''):'<div class="empty-state">No events match these filters.</div>'
-}
-function renderMarketFeed(){
-  const list=$('#marketLiveFeed');if(!list)return;
-  list.innerHTML=marketFeed.length?marketFeed.map(x=>`<div class="feed-item"><time>${esc(new Date(x.at).toLocaleTimeString())}</time><span class="feed-type">${esc(x.type)}</span><strong>${esc(x.title)}</strong><small>${esc(x.detail)}</small></div>`).join(''):'<div class="empty-state">New actual values and calendar changes will appear here automatically.</div>'
-}
-function setMarketTab(tab){
-  marketTab=tab;
+function ttSetMarketTab(tab){
+  ttMarketTab=tab;
   $$('.market-tab').forEach(x=>x.classList.toggle('active',x.dataset.marketTab===tab));
   $('#marketCalendarPanel').hidden=tab!=='calendar';
-  $('#marketFeedPanel').hidden=tab!=='feed';
-  $('#marketNewsPanel').hidden=tab!=='news'
+  $('#marketNewsPanel').hidden=tab!=='news';
+  $('#marketSourceNote').textContent=tab==='calendar'?'Forex Factory live calendar':'GDELT public news index · no API key';
+  if(tab==='news')ttLoadMarketNews(false);
 }
-function startMarketCalendar(){
-  readFFCache();
-  fetchFFCalendar(false);
-  clearInterval(marketCountdownTimer);
-  marketCountdownTimer=setInterval(()=>{renderNextImpact();if(marketTab==='calendar')renderMarketCalendar()},1000)
+
+function ttNewsDate(raw){
+  if(!raw)return null;
+  const s=String(raw);
+  let d=new Date(s);
+  if(!Number.isNaN(d.getTime()))return d;
+  const m=s.match(/^(\d{4})(\d{2})(\d{2})T?(\d{2})(\d{2})(\d{2})Z?$/);
+  if(m)return new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6]));
+  return null;
+}
+function ttRelativeTime(d){
+  if(!d)return 'Now';
+  const sec=Math.max(0,Math.floor((Date.now()-d.getTime())/1000));
+  if(sec<60)return `${sec}s ago`;
+  const min=Math.floor(sec/60);if(min<60)return `${min}m ago`;
+  const hr=Math.floor(min/60);if(hr<24)return `${hr}h ago`;
+  return d.toLocaleDateString()
+}
+function ttCleanText(v,max=240){
+  const s=String(v||'').replace(/\s+/g,' ').trim();
+  return s.length>max?s.slice(0,max-1)+'…':s
+}
+function ttRenderNews(items){
+  const list=$('#marketNewsList');if(!list)return;
+  if(!items.length){list.innerHTML='<div class="market-news-empty">No matching headlines returned right now.</div>';return}
+  list.innerHTML=items.slice(0,40).map(a=>{
+    const d=ttNewsDate(a.seendate||a.date||a.publishedAt);
+    const domain=String(a.domain||(()=>{try{return new URL(a.url).hostname.replace(/^www\./,'')}catch{return 'source'}})());
+    const title=ttCleanText(a.title||a.name||'Market update',180);
+    const desc=ttCleanText(a.description||a.snippet||'',240);
+    const url=/^https?:\/\//i.test(a.url||'')?a.url:'#';
+    return `<article class="market-news-item">
+      <div class="market-news-meta"><time>${esc(ttRelativeTime(d))}</time><span title="${esc(domain)}">${esc(domain)}</span></div>
+      <div class="market-news-body"><h3>${esc(title)}</h3>${desc?`<p>${esc(desc)}</p>`:''}</div>
+      <a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Open ↗</a>
+    </article>`
+  }).join('')
+}
+async function ttLoadMarketNews(force=false){
+  if(ttNewsLoading)return;
+  ttNewsLoading=true;
+  const statusEl=$('#marketNewsStatus');
+  if(statusEl)statusEl.textContent='Updating…';
+  try{
+    const q=TT_NEWS_QUERIES[ttNewsQuery]||TT_NEWS_QUERIES.macro;
+    const url=`${TT_GDELT_BASE}?query=${encodeURIComponent(q)}&mode=ArtList&maxrecords=50&format=json&sort=datedesc&timespan=1h`;
+    const res=await fetch(url,{cache:'no-store'});
+    if(!res.ok)throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
+    const items=Array.isArray(data.articles)?data.articles:Array.isArray(data)?data:[];
+    ttRenderNews(items);
+    if(statusEl)statusEl.textContent=`Updated ${new Date().toLocaleTimeString()} · ${items.length} headlines`;
+  }catch(err){
+    console.warn('Market news feed:',err);
+    if(statusEl)statusEl.textContent='News feed unavailable · retrying';
+    const list=$('#marketNewsList');
+    if(list&&!list.querySelector('.market-news-item'))list.innerHTML=`<div class="market-news-empty">Automatic news feed could not load right now. It will retry automatically.</div>`
+  }finally{
+    ttNewsLoading=false;
+    clearTimeout(ttNewsTimer);
+    ttNewsTimer=setTimeout(()=>ttLoadMarketNews(false),60000)
+  }
 }
 
 async function boot(){
@@ -484,24 +385,16 @@ async function deleteTradeById(id,fromDetail=false){
 $("#deleteTradeBtn").onclick=()=>deleteTradeById($("#eTradeId").value,false);
 $$("[data-edit-close]").forEach(x=>x.onclick=()=>$("#editTradeModal").classList.add("hidden"));
 
-function activate(view){$$('.view').forEach(v=>v.classList.remove('active'));$('#'+view+'View').classList.add('active');$$('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===view));$('#pageTitle').textContent={dashboard:'Dashboard',journal:'Journal',analytics:'Analytics',team:'Team',market:'Live Market',add:'Add Trade',settings:'Settings'}[view];if(view==='dashboard')requestAnimationFrame(()=>drawEquity(activeTrades()));if(view==='market'){renderMarketCalendar();renderNextImpact();renderMarketFeed()}}
+function activate(view){$$('.view').forEach(v=>v.classList.remove('active'));$('#'+view+'View').classList.add('active');$$('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===view));$('#pageTitle').textContent={dashboard:'Dashboard',journal:'Journal',analytics:'Analytics',team:'Team',market:'Live Market',add:'Add Trade',settings:'Settings'}[view];if(view==='dashboard')requestAnimationFrame(()=>drawEquity(activeTrades()));if(view==='market'&&ttMarketTab==='news')ttLoadMarketNews(false)}
 $$('.nav-item').forEach(n=>n.onclick=()=>activate(n.dataset.view));$$('[data-view-jump]').forEach(n=>n.onclick=()=>activate(n.dataset.viewJump));$('#globalTraderFilter').onchange=e=>{selectedTrader=e.target.value;renderAll()};['#searchTrades','#filterResult','#filterSession','#filterSetup'].forEach(sel=>$(sel).addEventListener(sel==='#searchTrades'?'input':'change',renderJournal));$$('[data-modal-close]').forEach(x=>x.onclick=()=>$('#tradeModal').classList.add('hidden'));window.onkeydown=e=>{if(e.key==='Escape')$('#tradeModal').classList.add('hidden')};window.onresize=()=>{$('#dashboardView').classList.contains('active')&&drawEquity(activeTrades())};
 
-$('#marketRefreshBtn').onclick=async()=>{
-  const elapsed=Date.now()-marketLastFetch;
-  if(marketLastFetch && elapsed<FF_MIN_REFRESH_MS){
-    const wait=Math.ceil((FF_MIN_REFRESH_MS-elapsed)/1000);
-    marketStatus('live','Calendar live',`Rate-limit protection · refresh available in ${wait}s`);
-    return
-  }
-  await fetchFFCalendar(true)
-};
-$('#marketCurrencyFilter').onchange=renderMarketCalendar;
-$('#marketImpactFilter').onchange=renderMarketCalendar;
-$('#marketDayFilter').onchange=renderMarketCalendar;
-$$('.market-tab').forEach(x=>x.onclick=()=>setMarketTab(x.dataset.marketTab));
-$('#clearMarketFeedBtn').onclick=()=>{marketFeed=[];renderMarketFeed()};
+$$('.market-tab').forEach(x=>x.onclick=()=>ttSetMarketTab(x.dataset.marketTab));
+$$('.news-filter').forEach(x=>x.onclick=()=>{
+  $$('.news-filter').forEach(b=>b.classList.remove('active'));
+  x.classList.add('active');
+  ttNewsQuery=x.dataset.newsQuery||'macro';
+  ttLoadMarketNews(true)
+});
+$('#refreshMarketNewsBtn').onclick=()=>ttLoadMarketNews(true);
 
 boot();
-
-startMarketCalendar();

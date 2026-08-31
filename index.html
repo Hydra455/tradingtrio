@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#08090e">
   <title>TradingTrio</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2.5.1">
+  <link rel="stylesheet" href="assets/css/styles.css?v=2.5.2">
 </head>
 <body data-theme="vice">
 <div class="ambient-bg"></div><div class="scanlines"></div>
@@ -22,7 +22,7 @@
       <button class="nav-item" data-view="settings">Settings</button>
     </nav>
     <div class="theme-switcher"><div class="theme-label">Theme</div><div class="theme-buttons"><button class="theme-btn active" data-theme-choice="vice">Vice</button><button class="theme-btn" data-theme-choice="orange">Orange</button></div></div>
-    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves · v2.5.1</small></div>
+    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves · v2.5.2</small></div>
   </aside>
 
   <main class="main">
@@ -63,87 +63,83 @@
     <section id="marketView" class="view">
       <div class="market-hero glow-card">
         <div>
-          <div class="eyebrow">Automatic economic feed</div>
+          <div class="eyebrow">NO API KEY · AUTOMATIC</div>
           <h2>Live Market</h2>
-          <p>Forex Factory economic calendar — no API key required.</p>
+          <p>Live Forex Factory economic releases plus automatic market headlines.</p>
         </div>
-        <div class="market-status-wrap">
-          <span id="marketStatusDot" class="market-status-dot loading"></span>
+        <div class="market-auto-state">
+          <span class="market-live-orb"></span>
           <div>
-            <strong id="marketStatusText">Loading calendar…</strong>
-            <small id="marketUpdatedText">Connecting to weekly feed</small>
+            <strong>Automatic feed</strong>
+            <small>No login, API key, Connect button, or manual setup.</small>
           </div>
-          <button id="marketRefreshBtn" class="secondary-btn" type="button">Refresh</button>
         </div>
       </div>
 
-      <div id="nextHighImpactCard" class="next-impact glow-card">
-        <div class="next-impact-label"><span class="impact-orb"></span> NEXT HIGH IMPACT</div>
-        <div id="nextImpactContent" class="next-impact-content">
-          <strong>Checking this week's calendar…</strong>
-        </div>
-      </div>
-
-      <div class="market-toolbar glow-card">
+      <div class="market-tabs-wrap glow-card">
         <div class="market-tabs">
-          <button class="market-tab active" data-market-tab="calendar">Calendar</button>
-          <button class="market-tab" data-market-tab="feed">Update Feed</button>
-          <button class="market-tab" data-market-tab="news">Breaking News</button>
+          <button class="market-tab active" data-market-tab="calendar">Live Calendar</button>
+          <button class="market-tab" data-market-tab="news">Fast News</button>
         </div>
-        <div class="market-filters">
-          <select id="marketDayFilter">
-            <option value="all">All week</option>
-            <option value="today">Today</option>
-            <option value="upcoming">Upcoming</option>
-          </select>
-          <select id="marketCurrencyFilter">
-            <option value="all">All currencies</option>
-            <option>USD</option><option>EUR</option><option>GBP</option><option>JPY</option>
-            <option>CAD</option><option>AUD</option><option>NZD</option><option>CHF</option><option>CNY</option>
-          </select>
-          <select id="marketImpactFilter">
-            <option value="all">All impact</option>
-            <option value="High">High impact</option>
-            <option value="Medium">Medium impact</option>
-            <option value="Low">Low impact</option>
-          </select>
-        </div>
+        <div class="market-source-note" id="marketSourceNote">Forex Factory live calendar</div>
       </div>
 
       <div id="marketCalendarPanel" class="market-panel">
-        <article class="panel glow-card">
+        <article class="panel glow-card live-calendar-card">
           <div class="panel-head">
-            <div><div class="eyebrow">This week</div><h2>Economic Calendar</h2></div>
-            <small class="market-hint">Times are converted automatically to your device timezone.</small>
+            <div>
+              <div class="eyebrow">FOREX FACTORY LIVE DATA</div>
+              <h2>Economic Calendar</h2>
+            </div>
+            <div class="live-badge"><span></span> LIVE</div>
           </div>
-          <div class="calendar-head">
-            <span>Time</span><span>Currency</span><span>Impact</span><span>Event</span><span>Actual</span><span>Forecast</span><span>Previous</span>
-          </div>
-          <div id="marketCalendarList" class="calendar-list">
-            <div class="empty-state">Loading Forex Factory calendar…</div>
-          </div>
-        </article>
-      </div>
 
-      <div id="marketFeedPanel" class="market-panel" hidden>
-        <article class="panel glow-card">
-          <div class="panel-head">
-            <div><div class="eyebrow">Detected changes</div><h2>Calendar Update Feed</h2></div>
-            <button id="clearMarketFeedBtn" class="text-btn" type="button">Clear</button>
+          <div class="calendar-explain">
+            <strong>This is the actual live Forex Factory calendar.</strong>
+            <span>Actual values update on Forex Factory's live feed without TradingTrio polling an hourly export.</span>
           </div>
-          <div id="marketLiveFeed" class="live-feed">
-            <div class="empty-state">New actual values and calendar changes will appear here automatically.</div>
+
+          <div class="ff-frame-shell">
+            <iframe
+              id="ffLiveCalendar"
+              class="ff-live-frame"
+              src="https://www.forexfactory.com/calendar?embed=true"
+              title="Forex Factory Live Economic Calendar"
+              loading="eager"
+              referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
+          </div>
+
+          <div class="calendar-fallback">
+            If the embedded calendar is blocked by your browser, use
+            <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener noreferrer">Open Forex Factory Calendar ↗</a>.
           </div>
         </article>
       </div>
 
       <div id="marketNewsPanel" class="market-panel" hidden>
         <article class="panel glow-card">
-          <div class="panel-head"><div><div class="eyebrow">Next module</div><h2>Breaking News</h2></div></div>
-          <div class="news-coming">
-            <div class="news-coming-icon">⚡</div>
-            <h3>Fast market headlines are next.</h3>
-            <p>The economic calendar is now automatic. We can connect a separate fast, no-login news source here without affecting the journal.</p>
+          <div class="panel-head">
+            <div>
+              <div class="eyebrow">AUTOMATIC PUBLIC NEWS FEED</div>
+              <h2>Fast Market News</h2>
+            </div>
+            <div class="news-controls">
+              <span id="marketNewsStatus">Loading…</span>
+              <button id="refreshMarketNewsBtn" class="secondary-btn" type="button">Refresh</button>
+            </div>
+          </div>
+
+          <div class="news-filter-row">
+            <button class="news-filter active" data-news-query="macro">Macro</button>
+            <button class="news-filter" data-news-query="forex">Forex</button>
+            <button class="news-filter" data-news-query="centralbanks">Central Banks</button>
+            <button class="news-filter" data-news-query="inflation">Inflation</button>
+            <button class="news-filter" data-news-query="jobs">Jobs</button>
+          </div>
+
+          <div id="marketNewsList" class="market-news-list">
+            <div class="empty-state">Loading automatic market headlines…</div>
           </div>
         </article>
       </div>
@@ -241,6 +237,6 @@
   </article>
 </div>
 
-<script src="assets/js/app.js?v=2.5.1"></script>
+<script src="assets/js/app.js?v=2.5.2"></script>
 </body>
 </html>
