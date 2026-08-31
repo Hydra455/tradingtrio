@@ -9,10 +9,161 @@
     "setup": "SMC",
     "session": "London",
     "grade": "A",
-    "followedPlan": true,
+    "followedPlan": false,
     "tags": [],
-    "notes": "",
-    "mistakes": "Doar un trade de tip A pentru ca nu am avut toate punctele corelate",
+    "notes": "Trade 50/50",
+    "mistakes": "Nu am avut setup-ul confirmat complet",
     "image": "images/denis/2026-08-17-nasdaq-long-012264.png"
+  },
+  {
+    "id": "denis-2026-08-17-nasdaq-408196",
+    "trader": "Denis",
+    "date": "2026-08-17",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 3.81,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "FVG",
+      "Liquidity Sweep",
+      "CHOCH"
+    ],
+    "notes": "Acest entry a respectat in totalitate analiza",
+    "mistakes": "",
+    "image": "images/denis/2026-08-17-nasdaq-long-408196.png"
+  },
+  {
+    "id": "denis-2026-08-17-nasdaq-564079",
+    "trader": "Denis",
+    "date": "2026-08-17",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 5.45,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "FVG",
+      "Liquidity Sweep",
+      "CHOCH"
+    ],
+    "notes": "A respectat in totalitate analiza",
+    "mistakes": "",
+    "image": "images/denis/2026-08-17-nasdaq-long-564079.png"
+  },
+  {
+    "id": "denis-2026-08-17-nasdaq-695428",
+    "trader": "Denis",
+    "date": "2026-08-17",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 4.66,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "FVG",
+      "Liquidity Sweep",
+      "CHOCH"
+    ],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-08-17-nasdaq-long-695428.png"
+  },
+  {
+    "id": "nel-2026-07-18-nq-727904",
+    "trader": "Nel",
+    "date": "2026-07-18",
+    "symbol": "NQ",
+    "direction": "SHORT",
+    "r": -1,
+    "setup": "low liquidity fvg ifvg ob",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "fvg mss sweep ob"
+    ],
+    "notes": "order block, sweep mic, choch fvg+ifvg",
+    "mistakes": "intrare executata prea rapid fara  o lichidare concreta",
+    "image": "images/nel/2026-07-18-nq-short-727904.png"
+  },
+  {
+    "id": "denis-2026-08-19-nasdaq-421074",
+    "trader": "Denis",
+    "date": "2026-08-19",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 5.24,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A",
+    "followedPlan": false,
+    "tags": [
+      "FVG",
+      "Liquidity Sweep"
+    ],
+    "notes": "A luat lichidarea in Asia Low, mi s-a format FVG pe timeframe-ul de 5m",
+    "mistakes": "Nu s-a astepat un COCH confirmat",
+    "image": "images/denis/2026-08-19-nasdaq-long-421074.png"
+  },
+  {
+    "id": "nel-2026-08-19-nq-735073",
+    "trader": "Nel",
+    "date": "2026-08-19",
+    "symbol": "NQ",
+    "direction": "LONG",
+    "r": 3.5,
+    "setup": "liq sweep ,choch, fvg",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "fvg choch sweep"
+    ],
+    "notes": "lichidare multipla in zona de fvg+choch",
+    "mistakes": "iesire mai rapida",
+    "image": "images/nel/2026-08-19-nq-long-735073.png"
+  },
+  {
+    "id": "nel-2026-08-27-nq-191018",
+    "trader": "Nel",
+    "date": "2026-08-27",
+    "symbol": "NQ",
+    "direction": "LONG",
+    "r": 2.57,
+    "setup": "liquidity fvg choch bos+ lichidare sesiune",
+    "session": "New York",
+    "grade": "A",
+    "followedPlan": true,
+    "tags": [
+      "fvg choch sweep"
+    ],
+    "notes": "liquidity swee + liquidity session",
+    "mistakes": "iesire rapida",
+    "image": "images/nel/2026-08-27-nq-long-191018.png"
+  },
+  {
+    "id": "nel-2026-08-27-nq-523558",
+    "trader": "Nel",
+    "date": "2026-08-27",
+    "symbol": "NQ",
+    "direction": "LONG",
+    "r": -1.5,
+    "setup": "liquidity fvg choch fara bos",
+    "session": "New York",
+    "grade": "C",
+    "followedPlan": true,
+    "tags": [
+      "fvg choch sweep"
+    ],
+    "notes": "sweep luat de 2 ori",
+    "mistakes": "intrare rapida",
+    "image": "images/nel/2026-08-27-nq-long-523558.png"
   }
 ]
