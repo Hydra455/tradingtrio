@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#08090e">
   <title>TradingTrio</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2.5.2">
+  <link rel="stylesheet" href="assets/css/styles.css?v=2.5.3">
 </head>
 <body data-theme="vice">
 <div class="ambient-bg"></div><div class="scanlines"></div>
@@ -22,7 +22,7 @@
       <button class="nav-item" data-view="settings">Settings</button>
     </nav>
     <div class="theme-switcher"><div class="theme-label">Theme</div><div class="theme-buttons"><button class="theme-btn active" data-theme-choice="vice">Vice</button><button class="theme-btn" data-theme-choice="orange">Orange</button></div></div>
-    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves · v2.5.2</small></div>
+    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves · v2.5.3</small></div>
   </aside>
 
   <main class="main">
@@ -65,81 +65,72 @@
         <div>
           <div class="eyebrow">NO API KEY · AUTOMATIC</div>
           <h2>Live Market</h2>
-          <p>Live Forex Factory economic releases plus automatic market headlines.</p>
+          <p>Economic releases and market headlines loaded automatically through TradingView.</p>
         </div>
         <div class="market-auto-state">
           <span class="market-live-orb"></span>
-          <div>
-            <strong>Automatic feed</strong>
-            <small>No login, API key, Connect button, or manual setup.</small>
-          </div>
+          <div><strong>Automatic feed</strong><small>No API key, login, or Connect button.</small></div>
         </div>
       </div>
 
       <div class="market-tabs-wrap glow-card">
         <div class="market-tabs">
-          <button class="market-tab active" data-market-tab="calendar">Live Calendar</button>
-          <button class="market-tab" data-market-tab="news">Fast News</button>
+          <button class="market-tab active" data-market-tab="calendar">Economic Calendar</button>
+          <button class="market-tab" data-market-tab="news">Market News</button>
         </div>
-        <div class="market-source-note" id="marketSourceNote">Forex Factory live calendar</div>
+        <div id="marketSourceNote" class="market-source-note">TradingView Economic Calendar</div>
       </div>
 
       <div id="marketCalendarPanel" class="market-panel">
-        <article class="panel glow-card live-calendar-card">
+        <article class="panel glow-card tv-panel">
           <div class="panel-head">
-            <div>
-              <div class="eyebrow">FOREX FACTORY LIVE DATA</div>
-              <h2>Economic Calendar</h2>
-            </div>
+            <div><div class="eyebrow">LIVE ECONOMIC EVENTS</div><h2>Economic Calendar</h2></div>
             <div class="live-badge"><span></span> LIVE</div>
           </div>
-
-          <div class="calendar-explain">
-            <strong>This is the actual live Forex Factory calendar.</strong>
-            <span>Actual values update on Forex Factory's live feed without TradingTrio polling an hourly export.</span>
-          </div>
-
-          <div class="ff-frame-shell">
-            <iframe
-              id="ffLiveCalendar"
-              class="ff-live-frame"
-              src="https://www.forexfactory.com/calendar?embed=true"
-              title="Forex Factory Live Economic Calendar"
-              loading="eager"
-              referrerpolicy="strict-origin-when-cross-origin">
-            </iframe>
-          </div>
-
-          <div class="calendar-fallback">
-            If the embedded calendar is blocked by your browser, use
-            <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener noreferrer">Open Forex Factory Calendar ↗</a>.
+          <div class="widget-note"><strong>Automatic calendar.</strong><span>TradingView supplies the event schedule and released data directly inside this widget.</span></div>
+          <div class="tv-widget-host">
+            <div class="tradingview-widget-container tv-fill">
+              <div class="tradingview-widget-container__widget tv-fill"></div>
+              <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/economic-calendar/" rel="noopener nofollow" target="_blank"><span>Economic Calendar</span></a> by TradingView</div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+              {
+                "colorTheme": "dark",
+                "isTransparent": false,
+                "locale": "en",
+                "countryFilter": "us,ca,eu,ch,gb,au,cn,nz,jp",
+                "importanceFilter": "-1,0,1",
+                "width": "100%",
+                "height": "100%"
+              }
+              </script>
+            </div>
           </div>
         </article>
       </div>
 
       <div id="marketNewsPanel" class="market-panel" hidden>
-        <article class="panel glow-card">
+        <article class="panel glow-card tv-panel">
           <div class="panel-head">
-            <div>
-              <div class="eyebrow">AUTOMATIC PUBLIC NEWS FEED</div>
-              <h2>Fast Market News</h2>
-            </div>
-            <div class="news-controls">
-              <span id="marketNewsStatus">Loading…</span>
-              <button id="refreshMarketNewsBtn" class="secondary-btn" type="button">Refresh</button>
-            </div>
+            <div><div class="eyebrow">AUTOMATIC MARKET HEADLINES</div><h2>Market News</h2></div>
+            <div class="live-badge"><span></span> LIVE</div>
           </div>
-
-          <div class="news-filter-row">
-            <button class="news-filter active" data-news-query="macro">Macro</button>
-            <button class="news-filter" data-news-query="forex">Forex</button>
-            <button class="news-filter" data-news-query="centralbanks">Central Banks</button>
-            <button class="news-filter" data-news-query="inflation">Inflation</button>
-            <button class="news-filter" data-news-query="jobs">Jobs</button>
-          </div>
-
-          <div id="marketNewsList" class="market-news-list">
-            <div class="empty-state">Loading automatic market headlines…</div>
+          <div class="widget-note"><strong>Automatic news.</strong><span>TradingView Top Stories loads directly in the site with no TradingTrio API credentials.</span></div>
+          <div class="tv-widget-host">
+            <div class="tradingview-widget-container tv-fill">
+              <div class="tradingview-widget-container__widget tv-fill"></div>
+              <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/news/top-providers/tradingview/" rel="noopener nofollow" target="_blank"><span>Top stories</span></a> by TradingView</div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+              {
+                "displayMode": "regular",
+                "feedMode": "all_symbols",
+                "colorTheme": "dark",
+                "isTransparent": false,
+                "locale": "en",
+                "width": "100%",
+                "height": "100%"
+              }
+              </script>
+            </div>
           </div>
         </article>
       </div>
@@ -237,6 +228,6 @@
   </article>
 </div>
 
-<script src="assets/js/app.js?v=2.5.2"></script>
+<script src="assets/js/app.js?v=2.5.3"></script>
 </body>
 </html>
