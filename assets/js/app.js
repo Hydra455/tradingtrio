@@ -9,7 +9,7 @@ const num=v=>Number(v||0), fmtR=v=>`${num(v)>0?'+':''}${num(v).toFixed(2)}R`, cl
 
 
 
-const TT_NEWS_PROXY='https://api.rss2json.com/v1/api.json?rss_url=';
+const TT_NEWS_PROXY='https://api.forexrateapi.com/v1/latest';
 const TT_NEWS_FEEDS=[
   {market:'forex',source:'Investing.com Forex',url:'https://www.investing.com/rss/news_1.rss'},
   {market:'gold',source:'Investing.com Commodities',url:'https://www.investing.com/rss/news_11.rss'},
