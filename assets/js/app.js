@@ -1,4 +1,4 @@
-window.TRADINGTRIO_BUILD='2.6.0';
+window.TRADINGTRIO_BUILD='2.5.4';
 window.__ttImageUrls = window.__ttImageUrls || new Map();
 let trades=[],selectedTrader='all',previewFile=null,currentPayload=null;
 let currentGithubUser=null,currentTrader=null,membersConfig={members:[]};
@@ -9,47 +9,136 @@ const num=v=>Number(v||0), fmtR=v=>`${num(v)>0?'+':''}${num(v).toFixed(2)}R`, cl
 
 
 
-
-
+const TT_NEWS_PROXY='https://api.rss2json.com/v1/api.json?rss_url=';
 const TT_NEWS_FEEDS=[
- {source:'FXStreet',market:'macro',url:'https://www.fxstreet.com/rss/news'},
- {source:'Google News · Forex',market:'forex',url:'https://news.google.com/rss/search?q=(forex%20OR%20currency%20OR%20dollar%20OR%20euro%20OR%20yen%20OR%20sterling)%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen'},
- {source:'Google News · Indices',market:'indices',url:'https://news.google.com/rss/search?q=(Nasdaq%20OR%20%22S%26P%20500%22%20OR%20Dow%20OR%20DAX%20OR%20FTSE%20OR%20Nikkei)%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen'},
- {source:'Google News · Gold',market:'gold',url:'https://news.google.com/rss/search?q=(gold%20OR%20XAUUSD%20OR%20bullion)%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen'},
- {source:'Google News · Macro',market:'macro',url:'https://news.google.com/rss/search?q=(Fed%20OR%20FOMC%20OR%20ECB%20OR%20BOE%20OR%20BOJ%20OR%20CPI%20OR%20inflation%20OR%20NFP%20OR%20payrolls%20OR%20GDP%20OR%20PMI)%20when%3A1d&hl=en-US&gl=US&ceid=US%3Aen'}
+  {market:'forex',source:'Investing.com Forex',url:'https://www.investing.com/rss/news_1.rss'},
+  {market:'gold',source:'Investing.com Commodities',url:'https://www.investing.com/rss/news_11.rss'},
+  {market:'indices',source:'Investing.com Markets',url:'https://www.investing.com/rss/news_25.rss'},
+  {market:'macro',source:'Investing.com Economic Indicators',url:'https://www.investing.com/rss/news_95.rss'},
+  {market:'macro',source:'Investing.com Economy',url:'https://www.investing.com/rss/news_14.rss'}
 ];
-const FF_CALENDAR_URL='https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-const FF_CAL_CACHE='tt_ff_v260_cache';
-const FF_CAL_CACHE_TIME='tt_ff_v260_cache_time';
 let ttNewsItems=[],ttNewsMarket='all',ttNewsImpact='all',ttNewsTimer=null,ttNewsLoading=false;
-let ffCalendar=[],ffCalendarTimer=null,ffLastFetch=0;
 
-function ttStripHtml(v){const d=document.createElement('div');d.innerHTML=String(v||'');return(d.textContent||d.innerText||'').replace(/\s+/g,' ').trim()}
-function ttImpactForNews(t,d=''){const s=(t+' '+d).toLowerCase(),hi=[/\bfomc\b.*(?:decision|rate|cut|hike|statement)/,/federal reserve.*(?:decision|rate|cut|hike|emergency)/,/\bfed\b.*(?:decision|cuts?|hikes?|emergency|surprise)/,/\becb\b.*(?:decision|rate|cuts?|hikes?)/,/\bboe\b.*(?:decision|rate|cuts?|hikes?)/,/\bboj\b.*(?:decision|rate|cuts?|hikes?|intervention)/,/\bcpi\b.*(?:actual|rises?|falls?|jumps?|drops?|inflation)/,/\bnonfarm\b/,/\bnfp\b/,/\bunemployment rate\b/,/\brate decision\b/,/\binterest rate decision\b/,/\bcurrency intervention\b/,/\bwar\b/,/\bmissile\b/,/\bairstrike\b/,/\binvasion\b/,/\bceasefire\b/,/\bsanctions?\b/,/\bdefault\b/,/\bbank failure\b/],med=[/\bgdp\b/,/\bpmi\b/,/\bism\b/,/retail sales/,/jobless claims/,/\bpce\b/,/\bppi\b/,/consumer confidence/,/central bank/,/\bfed\b/,/\bfomc\b/,/\becb\b/,/\bboe\b/,/\bboj\b/,/\btreasury yields?\b/,/\bbond yields?\b/,/\bdollar index\b/,/\bdxy\b/,/\bgold\b/,/\bxau/,/\boil\b/,/\bcrude\b/,/inflation/,/geopolitical/,/tariffs?/,/jolts/,/employment/];if(hi.some(r=>r.test(s)))return'high';if(med.some(r=>r.test(s)))return'medium';return'low'}
-function ttMarketForNews(x){const s=(x.title+' '+x.description).toLowerCase();if(/\bgold\b|\bxau(?:usd|\/usd)?\b|bullion|precious metal/.test(s))return'gold';if(/nasdaq|s&p|sp500|dow(?: jones)?|dax|ftse|nikkei|eurostoxx|stocks?|equities|stock market|indices/.test(s))return'indices';if(/forex|foreign exchange|currency|eur\/?usd|gbp\/?usd|usd\/?jpy|dollar|euro|sterling|yen|swiss franc|\bfx\b/.test(s))return'forex';return x.market||'macro'}
-function ttNewsDate(v){const d=new Date(v||0);return Number.isNaN(d.getTime())?new Date():d}
-function ttTimeAgo(d){const s=Math.max(0,Math.floor((Date.now()-d)/1000));if(s<60)return s+'s';const m=Math.floor(s/60);if(m<60)return m+'m';const h=Math.floor(m/60);if(h<24)return h+'h';return Math.floor(h/24)+'d'}
-function ttRelevantNews(x){return /forex|foreign exchange|currency|dollar|euro|sterling|yen|franc|gold|xau|bullion|nasdaq|s&p|sp500|dow|dax|ftse|nikkei|stock market|indices|fed|fomc|ecb|boe|boj|central bank|inflation|cpi|pce|ppi|payroll|nfp|unemployment|gdp|pmi|ism|rate|yield|tariff|sanction|geopolit|oil|crude|jolts/.test((x.title+' '+x.description).toLowerCase())}
-function ttParseRSS(txt,f){const doc=new DOMParser().parseFromString(txt,'text/xml');if(doc.querySelector('parsererror'))throw Error('Invalid RSS');return[...doc.querySelectorAll('item')].map(n=>{const g=k=>n.querySelector(k)?.textContent?.trim()||'';const x={title:ttStripHtml(g('title')),description:ttStripHtml(g('description')).slice(0,280),link:g('link')||'#',pubDate:g('pubDate')||g('published')||g('updated'),source:f.source,market:f.market};x.market=ttMarketForNews(x);x.impact=ttImpactForNews(x.title,x.description);return x}).filter(x=>x.title&&ttRelevantNews(x))}
-async function ttText(url,timeout=12000){const c=new AbortController(),tm=setTimeout(()=>c.abort(),timeout);try{const r=await fetch(url,{cache:'no-store',signal:c.signal});if(!r.ok)throw Error('HTTP '+r.status);return await r.text()}finally{clearTimeout(tm)}}
-async function ttFetchFeed(f){const tries=[()=>ttText(f.url),()=>ttText('https://api.allorigins.win/raw?url='+encodeURIComponent(f.url)),()=>ttText('https://corsproxy.io/?url='+encodeURIComponent(f.url))];let last;for(const fn of tries){try{const a=ttParseRSS(await fn(),f);if(a.length)return a;last=Error('No items')}catch(e){last=e}}throw last||Error('Unavailable')}
-
-function ttHeadlineTerms(s){return String(s).toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>3&&!['with','from','that','this','after','amid','into','over','says','market','markets','news','latest','forex'].includes(w))}
-function ttSimilarity(a,b){const A=new Set(ttHeadlineTerms(a)),B=new Set(ttHeadlineTerms(b));if(!A.size||!B.size)return 0;let inter=0;A.forEach(x=>{if(B.has(x))inter++});return inter/Math.min(A.size,B.size)}
-function ttBuildClusters(items){const clusters=[];for(const item of items.slice(0,80)){let best=null,score=0;for(const c of clusters){const s=ttSimilarity(item.title,c.items[0].title);if(s>score){score=s;best=c}}if(best&&score>=.38)best.items.push(item);else clusters.push({items:[item]})}return clusters.map(c=>{const maxImpact=c.items.some(x=>x.impact==='high')?'high':c.items.some(x=>x.impact==='medium')?'medium':'low';const sources=new Set(c.items.map(x=>x.source));const latest=Math.max(...c.items.map(x=>ttNewsDate(x.pubDate).getTime()));const ageMin=Math.max(0,(Date.now()-latest)/60000);c.impact=maxImpact;c.sources=[...sources];c.score=c.items.length*4+c.sources.length*3+(maxImpact==='high'?8:maxImpact==='medium'?4:1)+Math.max(0,8-ageMin/10);return c}).sort((a,b)=>b.score-a.score)}
-
-function ttFilteredNews(){return ttNewsItems.filter(x=>(ttNewsImpact==='all'||x.impact===ttNewsImpact)&&(ttNewsMarket==='all'||x.market===ttNewsMarket||x.market==='macro'))}
-function ttRenderMarketNews(){const list=$('#marketNewsList');if(!list)return;const rows=ttFilteredNews();$('#latestStoryCount').textContent=`${rows.length} stor${rows.length===1?'y':'ies'}`;if(!rows.length){list.innerHTML='<div class="empty-state">No matching stories right now.</div>';ttRenderHotTopics([]);return}list.innerHTML=rows.slice(0,35).map(x=>{const d=ttNewsDate(x.pubDate);return`<article class="ff-story"><div class="ff-story-meta"><time>${esc(ttTimeAgo(d))} ago</time><span class="story-market">${esc(x.market==='macro'?'MACRO':x.market)}</span></div><div class="ff-story-main"><a href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">${esc(x.title)}</a>${x.description?`<small>${esc(x.description.slice(0,155))}</small>`:''}</div><div class="ff-story-side"><span class="impact-pill ${esc(x.impact)}">${esc(x.impact.toUpperCase())}</span><span class="story-source">${esc(x.source)}</span></div></article>`}).join('');ttRenderHotTopics(rows)}
-function ttRenderHotTopics(rows){const hot=$('#hotStoryPanel'),list=$('#hotTopicsList');if(!hot||!list)return;const clusters=ttBuildClusters(rows);if(!clusters.length){hot.innerHTML='<div class="empty-state">No hot story yet.</div>';list.innerHTML='';return}const c=clusters[0],lead=c.items[0];hot.innerHTML=`<div class="hot-story-topline"><span class="impact-pill ${esc(c.impact)}">${esc(c.impact.toUpperCase())}</span><span class="hot-cluster-count">${c.items.length} related · ${c.sources.length} source${c.sources.length===1?'':'s'}</span></div><h3>${esc(lead.title)}</h3>${lead.description?`<p>${esc(lead.description.slice(0,230))}</p>`:''}<div class="hot-story-sources">${c.sources.map(s=>`<span class="hot-source-chip">${esc(s)}</span>`).join('')}</div>`;list.innerHTML=clusters.slice(1,5).map(c=>`<div class="hot-topic-row"><strong>${esc(c.items[0].title)}</strong><div><span class="impact-pill ${esc(c.impact)}">${esc(c.impact.toUpperCase())}</span><small>${c.items.length} related</small></div></div>`).join('')}
-
-async function ttLoadMarketNews(){if(ttNewsLoading)return;ttNewsLoading=true;const state=$('#marketNewsState'),upd=$('#marketNewsUpdated'),orb=$('#marketNewsOrb');if(state)state.textContent='Updating…';if(upd)upd.textContent='Checking fast market sources';try{const rs=await Promise.allSettled(TT_NEWS_FEEDS.map(ttFetchFeed));let rows=[];rs.forEach(r=>{if(r.status==='fulfilled')rows.push(...r.value)});const failed=rs.filter(r=>r.status==='rejected').length,seen=new Set();rows=rows.filter(x=>{const k=(x.link!=='#'?x.link:x.title).toLowerCase();if(seen.has(k))return false;seen.add(k);return true}).sort((a,b)=>ttNewsDate(b.pubDate)-ttNewsDate(a.pubDate));if(rows.length)ttNewsItems=rows;ttRenderMarketNews();if(orb)orb.classList.toggle('error',!ttNewsItems.length);if(state)state.textContent=ttNewsItems.length?'News live':'News unavailable';if(upd)upd.textContent=ttNewsItems.length?`Updated ${new Date().toLocaleTimeString()} · ${ttNewsItems.length} stories${failed?' · '+failed+' source retrying':''}`:'Retrying automatically'}finally{ttNewsLoading=false;clearTimeout(ttNewsTimer);ttNewsTimer=setTimeout(ttLoadMarketNews,20000)}}
-
-function ffNormalize(x){return{id:`${x.date||''}|${x.country||''}|${x.title||''}`,title:String(x.title||'Economic event'),country:String(x.country||'All'),date:String(x.date||''),impact:String(x.impact||'Low'),forecast:String(x.forecast??''),previous:String(x.previous??''),actual:String(x.actual??'')}}
-function ffDate(x){const d=new Date(x.date);return Number.isNaN(d.getTime())?null:d}
-function ffImpactHtml(v){const c=String(v||'Low').toLowerCase();return`<span class="cal-impact ${esc(c)}"><i></i><i></i><i></i></span>`}
-function ffReadCache(){try{const raw=localStorage.getItem(FF_CAL_CACHE);if(!raw)return false;const arr=JSON.parse(raw);if(!Array.isArray(arr))return false;ffCalendar=arr.map(ffNormalize);ffRenderCalendar();return true}catch{return false}}
-function ffRenderCalendar(){const list=$('#ffCalendarList');if(!list)return;const cur=$('#calendarCurrencyFilter')?.value||'all',impact=$('#calendarImpactFilter')?.value||'all',day=$('#calendarDayFilter')?.value||'all';const now=new Date(),start=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime(),end=start+86400000;let rows=ffCalendar.filter(x=>{const t=ffDate(x)?.getTime()||0;if(cur!=='all'&&x.country!==cur)return false;if(impact!=='all'&&x.impact!==impact)return false;if(day==='today'&&(t<start||t>=end))return false;if(day==='upcoming'&&t<Date.now()-60000)return false;return true});list.innerHTML=rows.length?rows.map(x=>{const d=ffDate(x),past=d&&d<Date.now();return`<div class="ff-calendar-row ${past?'past':''}"><div class="cal-time"><b>${esc(d?d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'—')}</b><small>${esc(d?d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'}):'')}</small></div><span class="cal-currency">${esc(x.country)}</span>${ffImpactHtml(x.impact)}<span class="cal-event">${esc(x.title)}</span><span class="cal-value actual">${esc(x.actual||'—')}</span><span class="cal-value">${esc(x.forecast||'—')}</span><span class="cal-value">${esc(x.previous||'—')}</span></div>`}).join(''):'<div class="empty-state">No calendar events match these filters.</div>'}
-async function ffLoadCalendar(force=false){if(!force&&ffLastFetch&&Date.now()-ffLastFetch<150000)return;ffLastFetch=Date.now();const status=$('#calendarStatus');if(status)status.textContent='Updating Forex Factory schedule…';try{const tries=[()=>ttText(FF_CALENDAR_URL),()=>ttText('https://api.allorigins.win/raw?url='+encodeURIComponent(FF_CALENDAR_URL)),()=>ttText('https://corsproxy.io/?url='+encodeURIComponent(FF_CALENDAR_URL))];let raw,last;for(const fn of tries){try{raw=JSON.parse(await fn());if(Array.isArray(raw))break}catch(e){last=e;raw=null}}if(!Array.isArray(raw))throw last||Error('Calendar unavailable');ffCalendar=raw.map(ffNormalize).sort((a,b)=>(ffDate(a)?.getTime()||0)-(ffDate(b)?.getTime()||0));localStorage.setItem(FF_CAL_CACHE,JSON.stringify(raw));localStorage.setItem(FF_CAL_CACHE_TIME,String(Date.now()));ffRenderCalendar();if(status)status.textContent=`Updated ${new Date().toLocaleTimeString()}`}catch(e){const cached=ffReadCache();if(status)status.textContent=cached?'Using cached calendar':'Calendar temporarily unavailable'}finally{clearTimeout(ffCalendarTimer);ffCalendarTimer=setTimeout(ffLoadCalendar,300000)}}
+function ttStripHtml(v){
+  const d=document.createElement('div');d.innerHTML=String(v||'');
+  return (d.textContent||d.innerText||'').replace(/\s+/g,' ').trim()
+}
+function ttImpactForNews(title,desc=''){
+  const s=(title+' '+desc).toLowerCase();
+  const high=[
+    /\bfomc\b/,/federal reserve.*(?:rate|decision|cuts?|hikes?)/,/fed.*(?:cuts?|hikes?|decision|emergency)/,
+    /\becb\b.*(?:rate|decision|cuts?|hikes?)/,/bank of england.*(?:rate|decision)/,/\bboj\b.*(?:rate|decision|intervention)/,
+    /\bcpi\b/,/consumer price/,/\bnonfarm\b/,/\bnfp\b/,/payrolls/,/\bunemployment rate\b/,
+    /\brate decision\b/,/\binterest rate decision\b/,/\bemergency\b.*(?:rate|policy|meeting)/,
+    /\bintervention\b.*(?:yen|currency|fx)/,/capital controls?/,
+    /\bwar\b/,/\bmissile\b/,/\bairstrike\b/,/\binvasion\b/,/\bceasefire\b/,/\bsanctions?\b/,
+    /\bdefault\b/,/\bdebt ceiling\b/,/\bbank failure\b/,/\bfinancial crisis\b/
+  ];
+  const medium=[
+    /\bgdp\b/,/\bpmi\b/,/\bism\b/,/retail sales/,/jobless claims/,/\bpce\b/,/producer prices?/,/\bppi\b/,
+    /consumer confidence/,/central bank/,/\bfed\b/,/\becb\b/,/\bboe\b/,/\bboj\b/,
+    /\btreasury yields?\b/,/\bbond yields?\b/,/\bdollar index\b/,/\bdxy\b/,
+    /\bgold\b/,/\bxau/,/\boil\b/,/\bcrude\b/,/trade balance/,/inflation expectations?/,/manufacturing/,
+    /geopolitical/,/tariffs?/,/trade war/,/government shutdown/,/fiscal/
+  ];
+  if(high.some(r=>r.test(s)))return 'high';
+  if(medium.some(r=>r.test(s)))return 'medium';
+  return 'low'
+}
+function ttMarketForNews(item){
+  const s=(item.title+' '+item.description).toLowerCase();
+  if(/\bgold\b|\bxau\b|bullion|precious metal/.test(s))return 'gold';
+  if(/nasdaq|s&p|sp500|s&p 500|dow|dax|ftse|nikkei|stocks?|equities|index|indices|futures/.test(s))return 'indices';
+  if(/forex|currency|currencies|eur\/?usd|gbp\/?usd|usd\/?jpy|dollar|euro|sterling|yen|swiss franc|aussie|kiwi|cad\b|fx\b/.test(s))return 'forex';
+  if(item.market==='forex'||item.market==='gold'||item.market==='indices')return item.market;
+  // Macro news matters most to forex/indices/gold, show it to all.
+  return 'macro'
+}
+function ttNewsDate(v){
+  const d=new Date(v||0);return Number.isNaN(d.getTime())?new Date():d
+}
+function ttTimeAgo(d){
+  const sec=Math.max(0,Math.floor((Date.now()-d.getTime())/1000));
+  if(sec<60)return `${sec}s`;
+  const m=Math.floor(sec/60);if(m<60)return `${m}m`;
+  const h=Math.floor(m/60);if(h<24)return `${h}h`;
+  return `${Math.floor(h/24)}d`
+}
+function ttRelevantNews(x){
+  const s=(x.title+' '+x.description).toLowerCase();
+  return /forex|currency|dollar|euro|sterling|yen|franc|aud|cad|nzd|gold|xau|bullion|nasdaq|s&p|dow|dax|ftse|nikkei|index|indices|futures|fed|fomc|ecb|boe|boj|central bank|inflation|cpi|pce|ppi|payroll|nfp|unemployment|gdp|pmi|ism|rate|yield|tariff|sanction|geopolit|oil|crude/.test(s)
+}
+function ttRenderMarketNews(){
+  const list=$('#marketNewsList');if(!list)return;
+  let rows=ttNewsItems.filter(x=>{
+    if(ttNewsImpact!=='all'&&x.impact!==ttNewsImpact)return false;
+    if(ttNewsMarket==='all')return true;
+    return x.market===ttNewsMarket||x.market==='macro'
+  });
+  if(!rows.length){
+    list.innerHTML='<div class="empty-state">No matching headlines right now.</div>';return
+  }
+  list.innerHTML=rows.slice(0,60).map(x=>{
+    const d=ttNewsDate(x.pubDate);
+    return `<article class="market-news-item">
+      <div class="news-time"><strong>${esc(d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}))}</strong><small>${esc(ttTimeAgo(d))} ago</small></div>
+      <div class="news-market">${esc(x.market==='macro'?'MACRO':x.market)}</div>
+      <div class="news-body"><h3>${esc(x.title)}</h3>${x.description?`<p>${esc(x.description)}</p>`:''}</div>
+      <div class="news-impact-wrap"><span class="impact-pill ${esc(x.impact)}">${esc(x.impact.toUpperCase())}</span><span class="news-source">${esc(x.source)}</span></div>
+      <a class="news-open" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">Open ↗</a>
+    </article>`
+  }).join('')
+}
+async function ttFetchFeed(feed){
+  const url=TT_NEWS_PROXY+encodeURIComponent(feed.url);
+  const res=await fetch(url,{cache:'no-store'});
+  if(!res.ok)throw new Error(`${feed.source}: HTTP ${res.status}`);
+  const data=await res.json();
+  if(data.status&&data.status!=='ok')throw new Error(`${feed.source}: ${data.message||data.status}`);
+  const items=Array.isArray(data.items)?data.items:[];
+  return items.map(i=>{
+    const title=ttStripHtml(i.title);
+    const description=ttStripHtml(i.description||i.content).slice(0,260);
+    const base={title,description,link:i.link||'#',pubDate:i.pubDate||i.published||'',source:feed.source,market:feed.market};
+    base.market=ttMarketForNews(base);
+    base.impact=ttImpactForNews(title,description);
+    return base
+  }).filter(ttRelevantNews)
+}
+async function ttLoadMarketNews(force=false){
+  if(ttNewsLoading)return;
+  ttNewsLoading=true;
+  const state=$('#marketNewsState'),updated=$('#marketNewsUpdated'),orb=$('#marketNewsOrb');
+  if(state)state.textContent='Updating…';
+  if(updated)updated.textContent='Fetching market headlines';
+  try{
+    const settled=await Promise.allSettled(TT_NEWS_FEEDS.map(ttFetchFeed));
+    let rows=[];
+    settled.forEach(r=>{if(r.status==='fulfilled')rows.push(...r.value)});
+    const failed=settled.filter(r=>r.status==='rejected').length;
+    const seen=new Set();
+    rows=rows.filter(x=>{
+      const key=(x.link||x.title).toLowerCase();
+      if(seen.has(key))return false;seen.add(key);return true
+    });
+    rows.sort((a,b)=>ttNewsDate(b.pubDate)-ttNewsDate(a.pubDate));
+    if(rows.length)ttNewsItems=rows;
+    ttRenderMarketNews();
+    if(orb)orb.classList.toggle('error',!rows.length);
+    if(state)state.textContent=rows.length?'Feed live':'Feed unavailable';
+    if(updated)updated.textContent=rows.length?`Updated ${new Date().toLocaleTimeString()} · ${rows.length} relevant headlines${failed?` · ${failed} source${failed>1?'s':''} retrying`:''}`:'Automatic retry in 30s';
+  }catch(err){
+    console.warn('Market news:',err);
+    if(orb)orb.classList.add('error');
+    if(state)state.textContent='Feed unavailable';
+    if(updated)updated.textContent='Automatic retry in 30s';
+    if(!ttNewsItems.length)$('#marketNewsList').innerHTML='<div class="empty-state error">Could not load the public news feeds right now. TradingTrio will retry automatically.</div>'
+  }finally{
+    ttNewsLoading=false;
+    clearTimeout(ttNewsTimer);
+    ttNewsTimer=setTimeout(()=>ttLoadMarketNews(false),30000)
+  }
+}
 
 async function boot(){
   loadTheme();loadGitHubSettings();
@@ -349,4 +438,17 @@ $$("[data-edit-close]").forEach(x=>x.onclick=()=>$("#editTradeModal").classList.
 function activate(view){$$('.view').forEach(v=>v.classList.remove('active'));$('#'+view+'View').classList.add('active');$$('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===view));$('#pageTitle').textContent={dashboard:'Dashboard',journal:'Journal',analytics:'Analytics',team:'Team',market:'Live Market',add:'Add Trade',settings:'Settings'}[view];if(view==='dashboard')requestAnimationFrame(()=>drawEquity(activeTrades()))}
 $$('.nav-item').forEach(n=>n.onclick=()=>activate(n.dataset.view));$$('[data-view-jump]').forEach(n=>n.onclick=()=>activate(n.dataset.viewJump));$('#globalTraderFilter').onchange=e=>{selectedTrader=e.target.value;renderAll()};['#searchTrades','#filterResult','#filterSession','#filterSetup'].forEach(sel=>$(sel).addEventListener(sel==='#searchTrades'?'input':'change',renderJournal));$$('[data-modal-close]').forEach(x=>x.onclick=()=>$('#tradeModal').classList.add('hidden'));window.onkeydown=e=>{if(e.key==='Escape')$('#tradeModal').classList.add('hidden')};window.onresize=()=>{$('#dashboardView').classList.contains('active')&&drawEquity(activeTrades())};
 
+$$('[data-news-market]').forEach(x=>x.onclick=()=>{
+  ttNewsMarket=x.dataset.newsMarket||'all';
+  $$('[data-news-market]').forEach(b=>b.classList.toggle('active',b===x));
+  ttRenderMarketNews()
+});
+$$('[data-impact]').forEach(x=>x.onclick=()=>{
+  ttNewsImpact=x.dataset.impact||'all';
+  $$('[data-impact]').forEach(b=>b.classList.toggle('active',b===x));
+  ttRenderMarketNews()
+});
+$('#refreshMarketNewsBtn').onclick=()=>ttLoadMarketNews(true);
 
+boot();
+ttLoadMarketNews(false);
