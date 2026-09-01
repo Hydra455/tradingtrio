@@ -101,3 +101,6 @@ body[data-theme="orange"]{--bg:#060504;--sidebar:#0b0806;--panel:rgba(22,14,8,.8
   .news-impact-wrap{grid-column:3;justify-items:start}
   .news-open{grid-column:3}
 }
+
+/* v2.5.5 */
+.news-source{max-width:120px}
