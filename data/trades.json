@@ -165,5 +165,21 @@
     "notes": "sweep luat de 2 ori",
     "mistakes": "intrare rapida",
     "image": "images/nel/2026-08-27-nq-long-523558.png"
+  },
+  {
+    "id": "denis-2026-09-09-nasdaq-633867",
+    "trader": "Denis",
+    "date": "2026-09-09",
+    "symbol": "NASDAQ",
+    "direction": "SHORT",
+    "r": 0,
+    "setup": "SMC",
+    "session": "New York",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "A indeplinit toate conditiile pentru entry dar am luat Break Even",
+    "mistakes": "",
+    "image": "images/denis/2026-09-09-nasdaq-short-633867.png"
   }
 ]
