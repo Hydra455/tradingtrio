@@ -181,5 +181,21 @@
     "notes": "A indeplinit toate conditiile pentru entry dar am luat Break Even",
     "mistakes": "",
     "image": "images/denis/2026-09-09-nasdaq-short-633867.png"
+  },
+  {
+    "id": "denis-2026-09-13-nasdaq-320640",
+    "trader": "Denis",
+    "date": "2026-09-13",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": -2.05,
+    "setup": "SMC",
+    "session": "New York",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "Nu am pus stop loss-ul unde trebuie",
+    "mistakes": "",
+    "image": "images/denis/2026-09-13-nasdaq-long-320640.png"
   }
 ]
