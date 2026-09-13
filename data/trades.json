@@ -197,5 +197,21 @@
     "notes": "Nu am pus stop loss-ul unde trebuie",
     "mistakes": "",
     "image": "images/denis/2026-09-13-nasdaq-long-320640.png"
+  },
+  {
+    "id": "denis-2026-09-13-nasdaq-433932",
+    "trader": "Denis",
+    "date": "2026-09-13",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": -1.63,
+    "setup": "SMC",
+    "session": "New York",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-09-13-nasdaq-long-433932.png"
   }
 ]
