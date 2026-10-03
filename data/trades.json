@@ -247,5 +247,23 @@
     "notes": "liquidity sweep + lichidare sesiune, retragere ultim ifvg, fara choch, confirmare candela",
     "mistakes": "fara entry",
     "image": "images/nel/2026-10-03-nq-long-180267.png"
+  },
+  {
+    "id": "nel-2026-10-03-nq-324084",
+    "trader": "Nel",
+    "date": "2026-10-03",
+    "symbol": "NQ",
+    "direction": "SHORT",
+    "r": -9.57,
+    "setup": "lichidare sesiune fvg",
+    "session": "London",
+    "grade": "C",
+    "followedPlan": true,
+    "tags": [
+      "fvg sesiune"
+    ],
+    "notes": "",
+    "mistakes": "etry",
+    "image": "images/nel/2026-10-03-nq-short-324084.png"
   }
 ]
