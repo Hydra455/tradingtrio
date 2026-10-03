@@ -229,5 +229,23 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-09-25-xauusd-long-622353.png"
+  },
+  {
+    "id": "nel-2026-10-03-nq-180267",
+    "trader": "Nel",
+    "date": "2026-10-03",
+    "symbol": "NQ",
+    "direction": "LONG",
+    "r": 0,
+    "setup": "lichidare sesiune+ifvg, respingeri multiple h1 fara choch",
+    "session": "London",
+    "grade": "A",
+    "followedPlan": true,
+    "tags": [
+      "ifvg sweep"
+    ],
+    "notes": "liquidity sweep + lichidare sesiune, retragere ultim ifvg, fara choch, confirmare candela",
+    "mistakes": "fara entry",
+    "image": "images/nel/2026-10-03-nq-long-180267.png"
   }
 ]
