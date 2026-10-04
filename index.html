@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#08090e">
   <title>TradingTrio</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2.5.4">
+  <link rel="stylesheet" href="assets/css/styles.css?v=3.0.0">
 </head>
 <body data-theme="vice">
 <div class="ambient-bg"></div><div class="scanlines"></div>
@@ -13,16 +13,16 @@
   <aside class="sidebar">
     <div class="brand"><div class="brand-glow"></div><div class="brand-title">TRADING<span>TRIO</span></div><div class="brand-sub">DENIS · NEL · ALEX</div></div>
     <nav class="nav">
-      <button class="nav-item active" data-view="dashboard">Dashboard</button>
-      <button class="nav-item" data-view="journal">Journal</button>
-      <button class="nav-item" data-view="analytics">Analytics</button>
-      <button class="nav-item" data-view="team">Team</button>
-      <button class="nav-item nav-live" data-view="market"><span class="live-dot"></span>Live Market</button>
-      <button class="nav-item" data-view="add">+ Add Trade</button>
-      <button class="nav-item" data-view="settings">Settings</button>
+      <button class="nav-item active" data-view="dashboard"><span class="nav-mark">01</span><span>Dashboard</span></button>
+      <button class="nav-item" data-view="journal"><span class="nav-mark">02</span><span>Journal</span></button>
+      <button class="nav-item" data-view="analytics"><span class="nav-mark">03</span><span>Analytics</span></button>
+      <button class="nav-item" data-view="team"><span class="nav-mark">04</span><span>Team</span></button>
+      <button class="nav-item" data-view="notes"><span class="nav-mark">05</span><span>Notes</span></button>
+      <button class="nav-item nav-add" data-view="add"><span class="nav-mark">+</span><span>Add Trade</span></button>
+      <button class="nav-item" data-view="settings"><span class="nav-mark">06</span><span>Settings</span></button>
     </nav>
     <div class="theme-switcher"><div class="theme-label">Theme</div><div class="theme-buttons"><button class="theme-btn active" data-theme-choice="vice">Vice</button><button class="theme-btn" data-theme-choice="orange">Orange</button></div></div>
-    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves · v2.5.4</small></div>
+    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves · v3.0.0</small></div>
   </aside>
 
   <main class="main">
@@ -60,60 +60,53 @@
     <section id="teamView" class="view"><div id="teamCards" class="team-grid"></div><article class="panel glow-card"><div class="panel-head"><div><div class="eyebrow">Team</div><h2>Leaderboard</h2></div></div><div id="leaderboard"></div></article></section>
 
 
-    <section id="marketView" class="view">
-      <div class="market-hero glow-card">
-        <div>
-          <div class="eyebrow">FAST MARKET HEADLINES · NO API KEY</div>
-          <h2>Live Market News</h2>
-          <p>Forex, indices and gold headlines in one fast trading feed.</p>
+    <section id="notesView" class="view">
+      <div class="notes-hero glow-card">
+        <div class="notes-hero-copy">
+          <div class="eyebrow">Strategy workspace</div>
+          <h2>Notes</h2>
+          <p>Keep the playbook, execution rules and reminders in one focused workspace.</p>
         </div>
-        <div class="market-auto-state">
-          <span id="marketNewsOrb" class="market-live-orb"></span>
-          <div>
-            <strong id="marketNewsState">Automatic feed</strong>
-            <small id="marketNewsUpdated">Loading latest headlines…</small>
-          </div>
-          <button id="refreshMarketNewsBtn" class="secondary-btn" type="button">Refresh</button>
-        </div>
+        <div class="notes-status-pill"><span class="notes-status-dot"></span><div><strong id="notesSaveState">Ready</strong><small id="notesSaveTime">Saved in this browser</small></div></div>
       </div>
 
-      <div class="news-toolbar glow-card">
-        <div class="market-tabs">
-          <button class="market-tab active" data-news-market="all">All</button>
-          <button class="market-tab" data-news-market="forex">Forex</button>
-          <button class="market-tab" data-news-market="indices">Indices</button>
-          <button class="market-tab" data-news-market="gold">Gold</button>
-        </div>
-        <div class="impact-filters">
-          <button class="impact-filter active" data-impact="all">All impact</button>
-          <button class="impact-filter impact-high" data-impact="high">High</button>
-          <button class="impact-filter impact-medium" data-impact="medium">Medium</button>
-          <button class="impact-filter impact-low" data-impact="low">Low</button>
-        </div>
+      <div class="notes-layout">
+        <aside class="notes-index glow-card">
+          <div class="notes-index-head"><div><div class="eyebrow">Strategy vault</div><h3>Playbook</h3></div><span class="notes-count">01</span></div>
+          <button class="strategy-card active" type="button">
+            <span class="strategy-card-number">01</span>
+            <span><strong>Main Strategy</strong><small>Your core setup and execution plan</small></span>
+          </button>
+          <div class="notes-hint"><span>TIP</span><p>Import a <strong>.txt</strong> or <strong>.md</strong> file, or paste the strategy directly into the editor.</p></div>
+        </aside>
+
+        <article class="notes-editor glow-card">
+          <div class="notes-editor-head">
+            <div><div class="eyebrow">Main strategy</div><input id="strategyTitle" class="strategy-title" value="TradingTrio Strategy" aria-label="Strategy title"></div>
+            <div class="notes-actions">
+              <input id="strategyFileInput" type="file" accept=".txt,.md,text/plain,text/markdown" hidden>
+              <button id="importStrategyBtn" class="secondary-btn" type="button">Import file</button>
+              <button id="clearStrategyBtn" class="secondary-btn" type="button">Clear</button>
+              <button id="saveStrategyBtn" class="primary-btn" type="button">Save Notes</button>
+            </div>
+          </div>
+          <div class="strategy-meta">
+            <span><i></i> Local strategy document</span>
+            <span id="strategyWordCount">0 words</span>
+          </div>
+          <textarea id="strategyNotes" class="strategy-editor" spellcheck="true" placeholder="Paste or write your strategy here...
+
+Suggested structure:
+• Market conditions
+• Entry model
+• Confirmation checklist
+• Risk rules
+• Invalidation
+• Trade management
+• Examples / reminders"></textarea>
+          <div class="notes-footer"><span>Changes autosave locally while you type.</span><kbd>Ctrl</kbd><span>+</span><kbd>S</kbd><span>to save instantly</span></div>
+        </article>
       </div>
-
-      <article class="panel glow-card news-terminal-card">
-        <div class="panel-head">
-          <div>
-            <div class="eyebrow">TRADING NEWS TERMINAL</div>
-            <h2>Latest Headlines</h2>
-          </div>
-          <div class="news-legend">
-            <span class="impact-pill high">HIGH</span>
-            <span class="impact-pill medium">MEDIUM</span>
-            <span class="impact-pill low">LOW</span>
-          </div>
-        </div>
-
-        <div class="terminal-note">
-          <strong>Impact is estimated by TradingTrio from the headline.</strong>
-          <span>Central-bank decisions, CPI/NFP, emergency policy and major geopolitical shocks rank highest.</span>
-        </div>
-
-        <div id="marketNewsList" class="market-news-list">
-          <div class="empty-state">Loading forex, indices and gold headlines…</div>
-        </div>
-      </article>
     </section>
 
     <section id="addView" class="view">
@@ -208,6 +201,6 @@
   </article>
 </div>
 
-<script src="assets/js/app.js?v=2.5.4"></script>
+<script src="assets/js/app.js?v=3.0.0"></script>
 </body>
 </html>
