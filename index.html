@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#08090e">
   <title>TradingTrio</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=3.0.0">
+  <link rel="stylesheet" href="assets/css/styles.css?v=3.1.0">
 </head>
-<body data-theme="vice">
+<body>
 <div class="ambient-bg"></div><div class="scanlines"></div>
 <div class="shell">
   <aside class="sidebar">
@@ -21,12 +21,11 @@
       <button class="nav-item nav-add" data-view="add"><span class="nav-mark">+</span><span>Add Trade</span></button>
       <button class="nav-item" data-view="settings"><span class="nav-mark">06</span><span>Settings</span></button>
     </nav>
-    <div class="theme-switcher"><div class="theme-label">Theme</div><div class="theme-buttons"><button class="theme-btn active" data-theme-choice="vice">Vice</button><button class="theme-btn" data-theme-choice="orange">Orange</button></div></div>
-    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves · v3.0.0</small></div>
+    <div class="sidebar-footer"><span>GitHub Pages</span><small>Static frontend · GitHub API saves · v3.1.0</small></div>
   </aside>
 
   <main class="main">
-    <header class="topbar"><div><div class="eyebrow">TradingTrio Journal</div><h1 id="pageTitle">Dashboard</h1></div><div class="topbar-tools"><select id="globalTraderFilter"><option value="all">All traders</option></select><div class="save-indicator" id="saveIndicator">Local view</div></div></header>
+    <header class="topbar"><div><div class="eyebrow">TradingTrio Journal</div><h1 id="pageTitle">Dashboard</h1></div><div class="topbar-tools"><div class="trader-picker" id="traderPicker"><button class="trader-picker-trigger" id="traderPickerTrigger" type="button" aria-haspopup="listbox" aria-expanded="false"><span class="trader-picker-copy"><small>Trader view</small><strong id="traderPickerValue">All traders</strong></span><span class="trader-picker-chevron" aria-hidden="true"></span></button><div class="trader-picker-menu" id="traderPickerMenu" role="listbox" aria-label="Filter by trader"></div></div><div class="save-indicator" id="saveIndicator">Local view</div></div></header>
 
     <section id="dashboardView" class="view active">
       <div class="hero-strip"><div class="hero-copy"><span class="hero-kicker">3 traders. 1 journal.</span><strong>Track the setup. Respect the process.</strong></div><div class="hero-orb"></div></div>
@@ -201,6 +200,6 @@ Suggested structure:
   </article>
 </div>
 
-<script src="assets/js/app.js?v=3.0.0"></script>
+<script src="assets/js/app.js?v=3.1.0"></script>
 </body>
 </html>

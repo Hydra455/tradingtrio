@@ -1,4 +1,4 @@
-window.TRADINGTRIO_BUILD='3.0.0';
+window.TRADINGTRIO_BUILD='3.1.0';
 window.__ttImageUrls = window.__ttImageUrls || new Map();
 let trades=[],selectedTrader='all',previewFile=null,currentPayload=null;
 let currentGithubUser=null,currentTrader=null,membersConfig={members:[]};
@@ -10,7 +10,7 @@ const num=v=>Number(v||0), fmtR=v=>`${num(v)>0?'+':''}${num(v).toFixed(2)}R`, cl
 
 
 async function boot(){
-  loadTheme();loadGitHubSettings();
+  loadGitHubSettings();
   try{
     const [tradeRes,memberRes]=await Promise.all([
       fetch(`data/trades.json?v=${Date.now()}`),
@@ -24,11 +24,30 @@ async function boot(){
   }catch(e){console.error(e);$('#recentTrades').innerHTML=`<div class="empty-state">${esc(e.message)}</div>`}
 }
 
-function loadTheme(){setTheme(localStorage.getItem('tt_theme')||'vice')}
-function setTheme(theme){document.body.dataset.theme=theme;localStorage.setItem('tt_theme',theme);$$('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.themeChoice===theme));requestAnimationFrame(()=>drawEquity(activeTrades()))}
-$$('.theme-btn').forEach(b=>b.onclick=()=>setTheme(b.dataset.themeChoice));
+function initTraderPicker(){
+  const menu=$('#traderPickerMenu'),trigger=$('#traderPickerTrigger'),value=$('#traderPickerValue'),picker=$('#traderPicker');
+  if(!menu||!trigger||!value||!picker)return;
+  const options=[{value:'all',label:'All traders',meta:'Combined desk'},{value:'Denis',label:'Denis',meta:'Individual performance'},{value:'Nel',label:'Nel',meta:'Individual performance'},{value:'Alex',label:'Alex',meta:'Individual performance'}];
+  menu.innerHTML=options.map((o,i)=>`<button class="trader-picker-option${o.value===selectedTrader?' active':''}" type="button" role="option" aria-selected="${o.value===selectedTrader}" data-trader="${esc(o.value)}"><span class="trader-option-index">0${i+1}</span><span class="trader-option-copy"><strong>${esc(o.label)}</strong><small>${esc(o.meta)}</small></span><span class="trader-option-check">✓</span></button>`).join('');
+  const sync=()=>{
+    const current=options.find(o=>o.value===selectedTrader)||options[0];
+    value.textContent=current.label;
+    $$('.trader-picker-option').forEach(btn=>{const active=btn.dataset.trader===selectedTrader;btn.classList.toggle('active',active);btn.setAttribute('aria-selected',String(active))});
+  };
+  const close=()=>{picker.classList.remove('open');trigger.setAttribute('aria-expanded','false')};
+  const open=()=>{picker.classList.add('open');trigger.setAttribute('aria-expanded','true')};
+  if(!picker.dataset.eventsBound){
+    trigger.onclick=e=>{e.stopPropagation();picker.classList.contains('open')?close():open()};
+    document.addEventListener('click',e=>{if(!picker.contains(e.target))close()});
+    trigger.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='Enter'||e.key===' '){e.preventDefault();open();menu.querySelector('.active')?.focus()}else if(e.key==='Escape')close()});
+    menu.addEventListener('keydown',e=>{const items=$$('.trader-picker-option'),idx=items.indexOf(document.activeElement);if(!items.length)return;if(e.key==='Escape'){e.preventDefault();close();trigger.focus()}else if(e.key==='ArrowDown'){e.preventDefault();items[(idx+1+items.length)%items.length].focus()}else if(e.key==='ArrowUp'){e.preventDefault();items[(idx-1+items.length)%items.length].focus()}});
+    picker.dataset.eventsBound='1';
+  }
+  $$('.trader-picker-option').forEach(btn=>btn.onclick=e=>{e.stopPropagation();selectedTrader=btn.dataset.trader;sync();close();renderAll()});
+  sync();
+}
 
-function initFilters(){const people=['Denis','Nel','Alex'],sessions=[...new Set(trades.map(t=>t.session).filter(Boolean))].sort(),setups=[...new Set(trades.map(t=>t.setup).filter(Boolean))].sort();$('#globalTraderFilter').innerHTML='<option value="all">All traders</option>'+people.map(x=>`<option>${x}</option>`).join('');$('#filterSession').innerHTML='<option value="all">All sessions</option>'+sessions.map(x=>`<option>${esc(x)}</option>`).join('');$('#filterSetup').innerHTML='<option value="all">All setups</option>'+setups.map(x=>`<option>${esc(x)}</option>`).join('')}
+function initFilters(){const sessions=[...new Set(trades.map(t=>t.session).filter(Boolean))].sort(),setups=[...new Set(trades.map(t=>t.setup).filter(Boolean))].sort();$('#filterSession').innerHTML='<option value="all">All sessions</option>'+sessions.map(x=>`<option>${esc(x)}</option>`).join('');$('#filterSetup').innerHTML='<option value="all">All setups</option>'+setups.map(x=>`<option>${esc(x)}</option>`).join('');initTraderPicker()}
 function initAddForm(){if(!$('#fDate').value)$('#fDate').value=new Date().toISOString().slice(0,10);const dz=$('#dropZone'),inp=$('#imageInput');dz.onclick=()=>inp.click();dz.ondragover=e=>{e.preventDefault();dz.style.transform='scale(1.005)'};dz.ondragleave=()=>dz.style.transform='';dz.ondrop=e=>{e.preventDefault();dz.style.transform='';if(e.dataTransfer.files[0])loadPreview(e.dataTransfer.files[0])};inp.onchange=()=>inp.files[0]&&loadPreview(inp.files[0])}
 function loadPreview(file){if(!file.type.startsWith('image/'))return;previewFile=file;$('#imagePreview').src=URL.createObjectURL(file);$('#imagePreview').hidden=false;$('#dropEmpty').hidden=true;buildPayload()}
 function activeTrades(){return selectedTrader==='all'?trades:trades.filter(t=>t.trader===selectedTrader)}
@@ -305,7 +324,7 @@ $("#deleteTradeBtn").onclick=()=>deleteTradeById($("#eTradeId").value,false);
 $$("[data-edit-close]").forEach(x=>x.onclick=()=>$("#editTradeModal").classList.add("hidden"));
 
 function activate(view){$$('.view').forEach(v=>v.classList.remove('active'));$('#'+view+'View').classList.add('active');$$('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===view));$('#pageTitle').textContent={dashboard:'Dashboard',journal:'Journal',analytics:'Analytics',team:'Team',notes:'Notes',add:'Add Trade',settings:'Settings'}[view];if(view==='dashboard')requestAnimationFrame(()=>drawEquity(activeTrades()))}
-$$('.nav-item').forEach(n=>n.onclick=()=>activate(n.dataset.view));$$('[data-view-jump]').forEach(n=>n.onclick=()=>activate(n.dataset.viewJump));$('#globalTraderFilter').onchange=e=>{selectedTrader=e.target.value;renderAll()};['#searchTrades','#filterResult','#filterSession','#filterSetup'].forEach(sel=>$(sel).addEventListener(sel==='#searchTrades'?'input':'change',renderJournal));$$('[data-modal-close]').forEach(x=>x.onclick=()=>$('#tradeModal').classList.add('hidden'));window.onkeydown=e=>{if(e.key==='Escape')$('#tradeModal').classList.add('hidden')};window.onresize=()=>{$('#dashboardView').classList.contains('active')&&drawEquity(activeTrades())};
+$$('.nav-item').forEach(n=>n.onclick=()=>activate(n.dataset.view));$$('[data-view-jump]').forEach(n=>n.onclick=()=>activate(n.dataset.viewJump));['#searchTrades','#filterResult','#filterSession','#filterSetup'].forEach(sel=>$(sel).addEventListener(sel==='#searchTrades'?'input':'change',renderJournal));$$('[data-modal-close]').forEach(x=>x.onclick=()=>$('#tradeModal').classList.add('hidden'));window.onkeydown=e=>{if(e.key==='Escape')$('#tradeModal').classList.add('hidden')};window.onresize=()=>{$('#dashboardView').classList.contains('active')&&drawEquity(activeTrades())};
 
 
 const NOTES_STORAGE_KEY='tt_strategy_notes_v1';

@@ -1,5 +1,4 @@
 :root{--bg:#05050a;--sidebar:#090810;--panel:rgba(15,13,25,.84);--panel2:rgba(20,15,32,.94);--line:rgba(255,255,255,.10);--text:#f8f5ff;--muted:#a89db7;--accent:#ff3dac;--accent2:#8b5cff;--good:#35e89b;--bad:#ff4e78;--warn:#ffc857;--hero1:rgba(255,61,172,.22);--hero2:rgba(139,92,255,.14)}
-body[data-theme="orange"]{--bg:#060504;--sidebar:#0b0806;--panel:rgba(22,14,8,.86);--panel2:rgba(28,17,9,.95);--line:rgba(255,178,92,.13);--text:#fff7ee;--muted:#b7a38f;--accent:#ff7a00;--accent2:#ff3d00;--good:#b6f55a;--bad:#ff5364;--warn:#ffd15c;--hero1:rgba(255,122,0,.22);--hero2:rgba(255,61,0,.13)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 0,var(--hero1),transparent 30%),radial-gradient(circle at 20% 100%,var(--hero2),transparent 28%),linear-gradient(180deg,var(--bg),#040407 72%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}button,input,select,textarea{font:inherit}.ambient-bg{position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 20%,var(--hero1),transparent 18%),radial-gradient(circle at 90% 40%,var(--hero2),transparent 20%);filter:blur(30px);opacity:.75;animation:ambientMove 14s ease-in-out infinite alternate}.scanlines{position:fixed;inset:0;pointer-events:none;opacity:.025;background:repeating-linear-gradient(180deg,transparent 0 3px,#fff 4px)}@keyframes ambientMove{from{transform:translate3d(-2%,-1%,0) scale(1)}to{transform:translate3d(2%,1%,0) scale(1.06)}}
 .shell{min-height:100vh;display:grid;grid-template-columns:260px 1fr;position:relative;z-index:1}.sidebar{position:sticky;top:0;height:100vh;background:linear-gradient(180deg,rgba(9,8,16,.96),rgba(5,5,10,.90));border-right:1px solid var(--line);padding:26px 18px;display:flex;flex-direction:column;backdrop-filter:blur(18px)}.brand{position:relative;padding:8px 4px 24px}.brand-glow{position:absolute;width:120px;height:80px;left:-12px;top:-14px;background:var(--accent);filter:blur(50px);opacity:.16}.brand-title{position:relative;font-size:24px;line-height:.9;font-weight:1000;letter-spacing:-.05em;font-style:italic;transform:skew(-6deg);text-shadow:0 0 14px var(--accent)}.brand-title span{display:block;color:var(--accent);font-size:34px;letter-spacing:-.08em}.brand-sub{position:relative;color:var(--muted);font-size:10px;letter-spacing:.16em;margin-top:10px}.nav{display:grid;gap:8px}.nav-item{position:relative;border:1px solid transparent;border-radius:11px;padding:12px 13px;text-align:left;background:transparent;color:var(--muted);cursor:pointer;transition:.2s}.nav-item::before{content:"";position:absolute;left:-1px;top:20%;bottom:20%;width:2px;background:var(--accent);opacity:0;box-shadow:0 0 12px var(--accent)}.nav-item:hover,.nav-item.active{color:var(--text);background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 12%,transparent),transparent);border-color:var(--line);transform:translateX(2px)}.nav-item.active::before{opacity:1}.theme-switcher{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}.theme-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}.theme-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}.theme-btn{border:1px solid var(--line);background:rgba(255,255,255,.025);color:var(--muted);border-radius:10px;padding:8px;cursor:pointer}.theme-btn.active{color:var(--text);border-color:var(--accent);box-shadow:0 0 18px color-mix(in srgb,var(--accent) 20%,transparent)}.sidebar-footer{margin-top:auto;border-top:1px solid var(--line);padding-top:16px;display:grid;gap:4px;font-size:11px;color:var(--muted)}.sidebar-footer span{color:var(--accent);font-weight:800}
 .main{padding:28px;min-width:0}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:16px}.topbar h1{margin:3px 0 0;font-size:34px;letter-spacing:-.04em}.eyebrow{text-transform:uppercase;letter-spacing:.16em;color:var(--accent);font-size:10px;font-weight:900}.topbar-tools{display:flex;gap:10px;align-items:center}.save-indicator{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.025)}select,input,textarea{background:rgba(4,4,9,.7);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 12px;outline:none;transition:.2s}textarea{resize:vertical}select:focus,input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 10%,transparent)}
@@ -74,3 +73,269 @@ select,input,textarea{border-radius:12px;background:rgba(4,4,9,.54);border-color
 @media(max-width:1100px){.shell{grid-template-columns:240px minmax(0,1fr)}.main{padding:26px 24px}.notes-layout{grid-template-columns:230px minmax(0,1fr)}}
 @media(max-width:850px){.notes-layout{grid-template-columns:1fr}.notes-index{position:static}.notes-hero,.notes-editor-head{align-items:flex-start;flex-direction:column}.notes-status-pill{width:100%}.notes-actions{justify-content:flex-start}.notes-hero::after{right:-20px;font-size:84px}}
 @media(max-width:760px){.shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:16px;border-right:0;border-bottom:1px solid var(--line)}.brand{padding-bottom:16px}.nav{display:flex;overflow-x:auto;gap:7px;padding-bottom:4px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav-item{min-width:max-content;min-height:42px;padding:6px 10px}.nav-item:hover,.nav-item.active{transform:none}.nav-mark{width:27px;height:27px;flex-basis:27px}.theme-switcher{display:none}.main{padding:20px 15px 34px}.topbar h1{font-size:31px}.hero-strip{min-height:135px;padding:22px}.hero-copy strong{font-size:23px}.hero-orb{opacity:.45}.kpi-grid{gap:10px}.notes-hero{padding:22px}.notes-editor{padding:16px}.strategy-title{font-size:22px}.notes-actions{width:100%}.notes-actions button{flex:1}.strategy-editor{min-height:440px}}
+
+/* =========================================================
+   TradingTrio v3.1 — Aggressive Modern / single fixed theme
+   ========================================================= */
+:root{
+  --bg:#050607;
+  --sidebar:#070809;
+  --panel:rgba(12,13,15,.94);
+  --panel2:rgba(17,18,21,.98);
+  --line:rgba(255,255,255,.095);
+  --text:#f6f3ee;
+  --muted:#8d8c88;
+  --accent:#ff5a12;
+  --accent2:#ff2d00;
+  --good:#9af238;
+  --bad:#ff405d;
+  --warn:#ffc247;
+  --hero1:rgba(255,90,18,.16);
+  --hero2:rgba(255,45,0,.08);
+  --radius-lg:10px;
+  --radius-xl:12px;
+  --shadow-soft:0 18px 58px rgba(0,0,0,.36);
+}
+html{background:#050607;color-scheme:dark}
+body{
+  background:
+    linear-gradient(115deg,rgba(255,90,18,.035) 0 1px,transparent 1px 100%),
+    radial-gradient(circle at 96% 0,rgba(255,90,18,.13),transparent 29%),
+    linear-gradient(180deg,#08090b 0,#050607 54%,#040506 100%);
+  font-family:Inter,"Arial Narrow",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.ambient-bg{
+  opacity:.5;
+  filter:none;
+  background:
+    linear-gradient(135deg,transparent 0 68%,rgba(255,90,18,.045) 68% 69%,transparent 69% 100%),
+    radial-gradient(circle at 84% 16%,rgba(255,90,18,.13),transparent 20%);
+  animation:aggressiveAmbient 11s ease-in-out infinite alternate;
+}
+@keyframes aggressiveAmbient{from{transform:translate3d(-1%,0,0)}to{transform:translate3d(1.5%,-1%,0)}}
+.scanlines{
+  opacity:.13;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);
+  background-size:38px 38px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.7),transparent 80%);
+}
+.shell{grid-template-columns:272px minmax(0,1fr)}
+.sidebar{
+  background:linear-gradient(180deg,rgba(8,9,11,.985),rgba(5,6,7,.97));
+  border-right:1px solid rgba(255,90,18,.18);
+  padding:28px 20px 22px;
+  box-shadow:22px 0 60px rgba(0,0,0,.23);
+}
+.sidebar::after{content:"";position:absolute;right:-1px;top:0;width:1px;height:160px;background:linear-gradient(var(--accent),transparent);box-shadow:0 0 20px rgba(255,90,18,.45)}
+.brand{padding:8px 6px 30px}
+.brand-glow{width:140px;height:80px;left:-32px;top:-18px;background:var(--accent);filter:blur(58px);opacity:.16}
+.brand-title{font-size:25px;line-height:.82;letter-spacing:-.065em;text-shadow:none;transform:skew(-7deg);font-weight:1000}
+.brand-title span{font-size:38px;color:var(--accent);letter-spacing:-.09em;text-shadow:0 0 20px rgba(255,90,18,.18)}
+.brand-sub{margin-top:14px;font-size:9px;letter-spacing:.25em;color:#77746e}
+.nav{gap:7px}
+.nav-item{
+  min-height:52px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  border-radius:8px;
+  border:1px solid transparent;
+  padding:8px 11px;
+  color:#9f9c96;
+  font-weight:760;
+  letter-spacing:-.01em;
+  overflow:hidden;
+}
+.nav-item::before{left:0;top:0;bottom:0;width:3px;transform:none;background:var(--accent);box-shadow:0 0 18px rgba(255,90,18,.4)}
+.nav-item::after{content:"";position:absolute;right:-18px;top:0;width:40px;height:100%;background:linear-gradient(135deg,transparent 32%,rgba(255,90,18,.12) 33% 65%,transparent 66%);opacity:0;transform:translateX(8px);transition:.28s ease}
+.nav-item:hover,.nav-item.active{transform:translateX(3px);color:var(--text);background:linear-gradient(90deg,rgba(255,90,18,.13),rgba(255,90,18,.02) 72%);border-color:rgba(255,90,18,.22);box-shadow:inset 0 0 30px rgba(255,90,18,.035)}
+.nav-item:hover::after,.nav-item.active::after{opacity:1;transform:none}
+.nav-mark{width:31px;height:31px;flex-basis:31px;border-radius:6px;border-color:rgba(255,255,255,.09);background:#0d0f11;color:#77746f}
+.nav-item:hover .nav-mark,.nav-item.active .nav-mark{background:rgba(255,90,18,.11);border-color:rgba(255,90,18,.45);color:#fff;box-shadow:0 0 16px rgba(255,90,18,.11)}
+.nav-add .nav-mark{color:var(--accent)}
+.sidebar-footer{margin:24px 6px 0;padding-top:18px;border-color:rgba(255,255,255,.075)}
+.sidebar-footer span{color:var(--accent);font-size:9px;letter-spacing:.18em}
+.sidebar-footer small{color:#65635f}
+.main{max-width:1740px;padding:32px 38px 54px}
+.topbar{min-height:78px;margin-bottom:24px}
+.topbar .eyebrow{letter-spacing:.22em}
+.topbar h1{font-size:43px;font-weight:930;letter-spacing:-.065em;text-transform:uppercase}
+.topbar-tools{gap:9px}
+.save-indicator{
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  padding:0 13px;
+  border-radius:7px;
+  border-color:rgba(255,255,255,.09);
+  background:#0c0d0f;
+  color:#777772;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:9px;
+}
+.eyebrow{color:var(--accent);font-size:9px;letter-spacing:.2em}
+
+/* Custom trader picker — avoids the browser-native white dropdown */
+.trader-picker{position:relative;z-index:120}
+.trader-picker-trigger{
+  width:214px;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:8px 11px 8px 13px;
+  color:var(--text);
+  background:linear-gradient(180deg,#111316,#0b0c0e);
+  border:1px solid rgba(255,90,18,.36);
+  border-radius:8px;
+  cursor:pointer;
+  box-shadow:inset 0 1px rgba(255,255,255,.035),0 8px 28px rgba(0,0,0,.22);
+  transition:.24s ease;
+}
+.trader-picker-trigger:hover,.trader-picker.open .trader-picker-trigger{border-color:rgba(255,90,18,.82);box-shadow:0 0 0 3px rgba(255,90,18,.055),0 10px 30px rgba(0,0,0,.28)}
+.trader-picker-copy{display:grid;text-align:left;gap:2px}
+.trader-picker-copy small{font-size:8px;color:#77746e;text-transform:uppercase;letter-spacing:.14em;font-weight:850}
+.trader-picker-copy strong{font-size:13px;line-height:1.15;letter-spacing:-.01em}
+.trader-picker-chevron{width:26px;height:26px;border-radius:5px;border:1px solid rgba(255,255,255,.08);background:#090a0c;position:relative;flex:0 0 26px;transition:.24s ease}
+.trader-picker-chevron::before,.trader-picker-chevron::after{content:"";position:absolute;top:12px;width:7px;height:1.5px;background:var(--accent);transition:.24s ease}
+.trader-picker-chevron::before{left:6px;transform:rotate(42deg)}
+.trader-picker-chevron::after{right:6px;transform:rotate(-42deg)}
+.trader-picker.open .trader-picker-chevron{background:rgba(255,90,18,.09)}
+.trader-picker.open .trader-picker-chevron::before{transform:rotate(-42deg)}
+.trader-picker.open .trader-picker-chevron::after{transform:rotate(42deg)}
+.trader-picker-menu{
+  position:absolute;
+  right:0;
+  top:calc(100% + 9px);
+  width:286px;
+  padding:7px;
+  border:1px solid rgba(255,90,18,.24);
+  border-radius:9px;
+  background:rgba(8,9,11,.985);
+  box-shadow:0 24px 70px rgba(0,0,0,.52),0 0 35px rgba(255,90,18,.055);
+  backdrop-filter:blur(22px);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-7px) scale(.985);
+  transform-origin:top right;
+  transition:.19s ease;
+}
+.trader-picker-menu::before{content:"TRADER FILTER";display:block;padding:8px 10px 9px;color:#66645f;font-size:8px;font-weight:900;letter-spacing:.17em;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:5px}
+.trader-picker.open .trader-picker-menu{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.trader-picker-option{
+  position:relative;
+  width:100%;
+  min-height:54px;
+  display:grid;
+  grid-template-columns:31px 1fr 24px;
+  align-items:center;
+  gap:10px;
+  padding:7px 9px;
+  color:#b0ada6;
+  border:1px solid transparent;
+  border-radius:6px;
+  background:transparent;
+  text-align:left;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.trader-picker-option:hover,.trader-picker-option:focus-visible{outline:none;background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.075);color:#fff}
+.trader-picker-option.active{background:linear-gradient(90deg,rgba(255,90,18,.16),rgba(255,90,18,.035));border-color:rgba(255,90,18,.25);color:#fff}
+.trader-picker-option.active::before{content:"";position:absolute;left:-1px;top:8px;bottom:8px;width:2px;background:var(--accent);box-shadow:0 0 13px var(--accent)}
+.trader-option-index{width:29px;height:29px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.08);border-radius:5px;background:#0d0f11;color:#67655f;font-size:8px;font-weight:900}
+.trader-picker-option.active .trader-option-index{border-color:rgba(255,90,18,.4);color:var(--accent);background:rgba(255,90,18,.08)}
+.trader-option-copy{display:grid;gap:2px}
+.trader-option-copy strong{font-size:12px}
+.trader-option-copy small{font-size:8px;color:#6f6c66;letter-spacing:.02em}
+.trader-option-check{display:grid;place-items:center;width:21px;height:21px;border-radius:50%;color:transparent;border:1px solid rgba(255,255,255,.06);font-size:9px}
+.trader-picker-option.active .trader-option-check{color:#090a0b;background:var(--accent);border-color:var(--accent);font-weight:1000;box-shadow:0 0 16px rgba(255,90,18,.26)}
+
+/* Core surfaces */
+.hero-strip,.kpi,.panel,.filters,.notes-hero,.notes-index,.notes-editor,.team-card{
+  background:linear-gradient(145deg,rgba(18,19,22,.96),rgba(10,11,13,.95));
+  border-color:rgba(255,255,255,.085);
+  border-radius:9px;
+  box-shadow:0 16px 48px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.025);
+  backdrop-filter:blur(22px);
+}
+.glow-card{box-shadow:0 16px 48px rgba(0,0,0,.24);transition:transform .24s ease,border-color .24s ease,box-shadow .24s ease}
+.glow-card::before{inset:0 0 auto;height:1px;background:linear-gradient(90deg,rgba(255,90,18,.7),rgba(255,90,18,.08) 44%,transparent 72%);opacity:.42}
+.glow-card:hover{transform:translateY(-3px);border-color:rgba(255,90,18,.22);box-shadow:0 22px 58px rgba(0,0,0,.31),0 0 26px rgba(255,90,18,.04)}
+.hero-strip{
+  min-height:154px;
+  border-left:3px solid var(--accent);
+  background:
+    linear-gradient(105deg,rgba(255,90,18,.12),transparent 35%),
+    linear-gradient(145deg,#121316,#0b0c0e);
+  box-shadow:0 18px 58px rgba(0,0,0,.28),-10px 0 36px rgba(255,90,18,.045);
+}
+.hero-strip::after{right:24px;top:-29px;font-size:154px;color:rgba(255,90,18,.055);font-style:italic;letter-spacing:-.1em}
+.hero-copy strong{font-size:31px;text-transform:uppercase;font-weight:930;letter-spacing:-.045em;max-width:760px}
+.hero-kicker{font-size:9px;color:var(--accent);font-weight:900}
+.hero-orb{right:6%;width:142px;height:142px;border-radius:8px;transform:rotate(45deg);border-color:rgba(255,90,18,.26);box-shadow:inset 0 0 30px rgba(255,90,18,.04);animation:aggressiveOrb 5s ease-in-out infinite}
+@keyframes aggressiveOrb{50%{transform:rotate(45deg) scale(1.06);opacity:.58}}
+.kpi-grid{gap:13px;margin-bottom:13px}
+.kpi{position:relative;min-height:136px;padding:22px 22px 20px;overflow:hidden}
+.kpi::after{content:"";position:absolute;right:-28px;bottom:-45px;width:105px;height:105px;border:1px solid rgba(255,90,18,.075);transform:rotate(45deg)}
+.kpi span{font-size:9px;color:#817e78;letter-spacing:.12em;font-weight:800}
+.kpi strong{font-size:35px;font-weight:950;letter-spacing:-.05em;text-shadow:none}
+.kpi small{font-size:11px;color:#89867f}
+.panel{padding:21px;margin-bottom:13px}
+.panel-head{margin-bottom:16px}
+.panel h2{font-size:18px;font-weight:880;letter-spacing:-.025em}
+.two-col{gap:13px}
+.rank-row,.metric-row,.leader-row{border-bottom-color:rgba(255,255,255,.07);padding:12px 0}
+.rank-row strong:first-child,.metric-row strong:first-child,.leader-row strong:first-child{font-weight:830}
+.text-btn{font-weight:850;text-transform:uppercase;letter-spacing:.08em;font-size:9px}
+.trade-grid{gap:13px}
+.trade-card{border-radius:8px;background:#0f1113;border-color:rgba(255,255,255,.085);box-shadow:0 13px 36px rgba(0,0,0,.22)}
+.trade-card:hover{transform:translateY(-4px);border-color:rgba(255,90,18,.32);box-shadow:0 20px 46px rgba(0,0,0,.32),0 0 22px rgba(255,90,18,.045)}
+.trade-body{padding:14px}
+.trade-head h3{font-weight:870;letter-spacing:-.02em}
+.tag{border-radius:4px;background:#0a0b0d;border-color:rgba(255,255,255,.09);padding:5px 7px;color:#a9a59e}
+.filters{padding:11px;gap:9px}
+.team-card{border-radius:9px}
+.team-stat{border-radius:6px;background:#0b0c0e}
+
+/* Form language */
+select,input,textarea{
+  border-radius:7px;
+  background:#0a0b0d;
+  border-color:rgba(255,255,255,.10);
+  color:var(--text);
+}
+select{color-scheme:dark}
+select option{background:#0b0c0e;color:#f4f1eb}
+select:focus,input:focus,textarea:focus{border-color:rgba(255,90,18,.72);box-shadow:0 0 0 3px rgba(255,90,18,.07)}
+.primary-btn,.secondary-btn,.manage-btn{border-radius:6px;text-transform:uppercase;font-size:10px;letter-spacing:.07em;font-weight:900}
+.primary-btn{background:linear-gradient(105deg,#ff641b,var(--accent2));box-shadow:0 10px 26px rgba(255,75,11,.12)}
+.primary-btn:hover{box-shadow:0 14px 34px rgba(255,75,11,.20)}
+.secondary-btn{background:#0d0f11;border-color:rgba(255,255,255,.10)}
+.secondary-btn:hover{border-color:rgba(255,90,18,.42);background:rgba(255,90,18,.045)}
+.drop-zone{border-radius:8px;background:linear-gradient(135deg,rgba(255,90,18,.045),transparent 45%),#0a0b0d}
+.upload-icon{border-radius:7px}
+pre,.empty-state{border-radius:7px}
+.modal-card{border-radius:10px;border-color:rgba(255,90,18,.16)}
+.modal-x{border-radius:5px}
+
+/* Notes carries the same single-theme visual system */
+.notes-hero{border-left:3px solid var(--accent);border-radius:9px;background:linear-gradient(105deg,rgba(255,90,18,.10),transparent 32%),linear-gradient(145deg,#121316,#0b0c0e)}
+.notes-hero::after{color:rgba(255,90,18,.04);font-style:italic}
+.notes-status-pill{border-radius:7px;background:#0a0c0b}
+.notes-index,.notes-editor{border-radius:9px}
+.strategy-card{border-radius:6px;background:rgba(255,90,18,.055);border-color:rgba(255,90,18,.22)}
+.strategy-card-number{border-radius:5px;background:rgba(255,90,18,.11)}
+.notes-hint{border-radius:6px;background:#0b0c0e}
+.notes-count{border-radius:4px}
+.notes-footer kbd{border-radius:4px}
+
+@media(max-width:1100px){.shell{grid-template-columns:238px minmax(0,1fr)}.main{padding:28px 24px}.trader-picker-trigger{width:190px}}
+@media(max-width:760px){
+  .sidebar{padding:15px}.sidebar::after{display:none}.main{padding:19px 14px 34px}.topbar{align-items:flex-start}.topbar h1{font-size:32px}.topbar-tools{align-items:stretch}.trader-picker-trigger{width:180px}.trader-picker-menu{width:min(286px,calc(100vw - 28px))}.save-indicator{display:none}.hero-copy strong{font-size:22px}.hero-orb{opacity:.3}.nav-item{min-height:43px}.brand-title span{font-size:33px}
+}
+@media(max-width:520px){.topbar{flex-direction:column}.topbar-tools,.trader-picker,.trader-picker-trigger{width:100%}.trader-picker-menu{left:0;right:auto;width:100%}}
