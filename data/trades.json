@@ -72,22 +72,6 @@
     "image": "images/nel/2026-08-27-nq-long-523558.png"
   },
   {
-    "id": "denis-2026-09-25-xauusd-622353",
-    "trader": "Denis",
-    "date": "2026-09-25",
-    "symbol": "XAUUSD",
-    "direction": "LONG",
-    "r": 1.48,
-    "setup": "None",
-    "session": "Other",
-    "grade": "B",
-    "followedPlan": false,
-    "tags": [],
-    "notes": "",
-    "mistakes": "",
-    "image": "images/denis/2026-09-25-xauusd-long-622353.png"
-  },
-  {
     "id": "nel-2026-10-03-nq-180267",
     "trader": "Nel",
     "date": "2026-10-03",
