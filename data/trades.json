@@ -106,5 +106,21 @@
     "notes": "",
     "mistakes": "etry",
     "image": "images/nel/2026-10-03-nq-short-324084.png"
+  },
+  {
+    "id": "denis-2026-10-08-nasdaq-930786",
+    "trader": "Denis",
+    "date": "2026-10-08",
+    "symbol": "NASDAQ",
+    "direction": "SHORT",
+    "r": 1.82,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-10-08-nasdaq-short-930786.png"
   }
 ]
