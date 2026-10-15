@@ -122,5 +122,25 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-10-08-nasdaq-short-930786.png"
+  },
+  {
+    "id": "denis-2026-10-15-nq-859266",
+    "trader": "Denis",
+    "date": "2026-10-15",
+    "symbol": "NQ",
+    "direction": "LONG",
+    "r": -3.25,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "Liquidity Sweep",
+      "CHOCH",
+      "BB"
+    ],
+    "notes": "S-a respectat strategia dar noutatea PPI a facut ca trade-ul sa fie un SL",
+    "mistakes": "",
+    "image": "images/denis/2026-10-15-nq-long-859266.png"
   }
 ]
