@@ -158,5 +158,21 @@
     "notes": "",
     "mistakes": "Nu a fost zona care trebuie",
     "image": "images/denis/2026-10-20-nasdaq-short-494790.png"
+  },
+  {
+    "id": "denis-2026-10-20-nasdaq-567544",
+    "trader": "Denis",
+    "date": "2026-10-20",
+    "symbol": "NASDAQ",
+    "direction": "SHORT",
+    "r": -1.5,
+    "setup": "SMC",
+    "session": "Other",
+    "grade": "B",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "Nu a fost zona care trebuie",
+    "image": "images/denis/2026-10-20-nasdaq-short-567544.png"
   }
 ]
