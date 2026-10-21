@@ -149,7 +149,7 @@
     "date": "2026-10-20",
     "symbol": "NASDAQ",
     "direction": "SHORT",
-    "r": 0.5,
+    "r": 0.05,
     "setup": "SMC",
     "session": "Other",
     "grade": "B",
