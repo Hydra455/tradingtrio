@@ -211,5 +211,25 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-10-21-nasdaq-long-633007.png"
+  },
+  {
+    "id": "denis-2026-10-23-nasdaq-866755",
+    "trader": "Denis",
+    "date": "2026-10-23",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 3.1,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [
+      "FVG",
+      "Liquidity Sweep",
+      "CHOCH"
+    ],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-10-23-nasdaq-long-866755.png"
   }
 ]
