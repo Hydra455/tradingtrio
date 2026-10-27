@@ -247,5 +247,21 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-10-26-nasdaq-long-937157.png"
+  },
+  {
+    "id": "denis-2026-10-27-nasdaq-079509",
+    "trader": "Denis",
+    "date": "2026-10-27",
+    "symbol": "NASDAQ",
+    "direction": "SHORT",
+    "r": -1.26,
+    "setup": "SMC",
+    "session": "New York",
+    "grade": "A",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-10-27-nasdaq-short-079509.png"
   }
 ]
