@@ -270,7 +270,7 @@
     "date": "2026-10-29",
     "symbol": "NASDAQ",
     "direction": "LONG",
-    "r": 0.99,
+    "r": -0.99,
     "setup": "SMC",
     "session": "London",
     "grade": "A",
