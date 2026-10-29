@@ -279,5 +279,21 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-10-29-nasdaq-long-572853.png"
+  },
+  {
+    "id": "denis-2026-10-29-nasdaq-756183",
+    "trader": "Denis",
+    "date": "2026-10-29",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": 1.22,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-10-29-nasdaq-long-756183.png"
   }
 ]
