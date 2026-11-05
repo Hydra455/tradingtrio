@@ -311,5 +311,21 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-11-03-nasdaq-long-915318.png"
+  },
+  {
+    "id": "denis-2026-11-05-nasdaq-232007",
+    "trader": "Denis",
+    "date": "2026-11-05",
+    "symbol": "NASDAQ",
+    "direction": "SHORT",
+    "r": -2.13,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "Nu am tinut cont de alegeri",
+    "image": "images/denis/2026-11-05-nasdaq-short-232007.png"
   }
 ]
