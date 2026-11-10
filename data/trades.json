@@ -343,5 +343,21 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-11-10-nasdaq-short-184121.png"
+  },
+  {
+    "id": "denis-2026-11-10-nasdaq-999849",
+    "trader": "Denis",
+    "date": "2026-11-10",
+    "symbol": "NASDAQ",
+    "direction": "SHORT",
+    "r": 0.49,
+    "setup": "SMC",
+    "session": "Asia",
+    "grade": "B",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-11-10-nasdaq-short-999849.png"
   }
 ]
