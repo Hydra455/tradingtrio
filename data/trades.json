@@ -359,5 +359,21 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-11-10-nasdaq-short-999849.png"
+  },
+  {
+    "id": "denis-2026-11-12-xauusd-153675",
+    "trader": "Denis",
+    "date": "2026-11-12",
+    "symbol": "XAUUSD",
+    "direction": "LONG",
+    "r": -1.46,
+    "setup": "SMC",
+    "session": "Other",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-11-12-xauusd-long-153675.png"
   }
 ]
