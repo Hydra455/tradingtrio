@@ -375,5 +375,21 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-11-12-xauusd-long-153675.png"
+  },
+  {
+    "id": "denis-2026-11-16-nasdaq-879816",
+    "trader": "Denis",
+    "date": "2026-11-16",
+    "symbol": "NASDAQ",
+    "direction": "SHORT",
+    "r": 1.02,
+    "setup": "SMC",
+    "session": "New York",
+    "grade": "B",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "EMA + POC",
+    "mistakes": "",
+    "image": "images/denis/2026-11-16-nasdaq-short-879816.png"
   }
 ]
