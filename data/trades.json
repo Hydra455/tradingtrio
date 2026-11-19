@@ -391,5 +391,21 @@
     "notes": "EMA + POC",
     "mistakes": "",
     "image": "images/denis/2026-11-16-nasdaq-short-879816.png"
+  },
+  {
+    "id": "denis-2026-11-19-eurusd-133768",
+    "trader": "Denis",
+    "date": "2026-11-19",
+    "symbol": "EURUSD",
+    "direction": "LONG",
+    "r": 0.38,
+    "setup": "None",
+    "session": "London",
+    "grade": "C",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-11-19-eurusd-long-133768.png"
   }
 ]
