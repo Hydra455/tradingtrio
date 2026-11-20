@@ -407,5 +407,21 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-11-19-eurusd-long-133768.png"
+  },
+  {
+    "id": "denis-2026-11-20-nasdaq-682283",
+    "trader": "Denis",
+    "date": "2026-11-20",
+    "symbol": "NASDAQ",
+    "direction": "LONG",
+    "r": -2.91,
+    "setup": "SMC",
+    "session": "London",
+    "grade": "A",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-11-20-nasdaq-long-682283.png"
   }
 ]
