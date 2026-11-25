@@ -423,5 +423,21 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-11-20-nasdaq-long-682283.png"
+  },
+  {
+    "id": "denis-2026-11-25-gbpchf-692489",
+    "trader": "Denis",
+    "date": "2026-11-25",
+    "symbol": "GBPCHF",
+    "direction": "SHORT",
+    "r": 2.29,
+    "setup": "MCC",
+    "session": "Other",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-11-25-gbpchf-short-692489.png"
   }
 ]
