@@ -439,5 +439,21 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-11-25-gbpchf-short-692489.png"
+  },
+  {
+    "id": "denis-2026-11-25-nzdusd-698930",
+    "trader": "Denis",
+    "date": "2026-11-25",
+    "symbol": "NZDUSD",
+    "direction": "LONG",
+    "r": 2,
+    "setup": "MCC",
+    "session": "Other",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "",
+    "image": "images/denis/2026-11-25-nzdusd-long-698930.png"
   }
 ]
