@@ -455,5 +455,21 @@
     "notes": "",
     "mistakes": "",
     "image": "images/denis/2026-11-25-nzdusd-long-698930.png"
+  },
+  {
+    "id": "denis-2026-11-27-gbpchf-247679",
+    "trader": "Denis",
+    "date": "2026-11-27",
+    "symbol": "GBPCHF",
+    "direction": "SHORT",
+    "r": -2.81,
+    "setup": "SMC",
+    "session": "Other",
+    "grade": "A+",
+    "followedPlan": true,
+    "tags": [],
+    "notes": "",
+    "mistakes": "Din cauza la bank holiday miscarea a fost intoarsa",
+    "image": "images/denis/2026-11-27-gbpchf-short-247679.png"
   }
 ]
